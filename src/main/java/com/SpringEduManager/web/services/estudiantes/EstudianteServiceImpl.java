@@ -155,6 +155,7 @@ public class EstudianteServiceImpl implements EstudianteService {
      * @throws RuntimeException si el email ya está registrado por otro estudiante o no es válido
      */
     private void validaEmail(EstudianteDTO _estudiante){
+        /*
         // Regex estándar para validación de email
         String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         
@@ -164,7 +165,7 @@ public class EstudianteServiceImpl implements EstudianteService {
         if(!matcher.matches()){
             throw new RuntimeException("El email no es válido.");
         }
-        
+         */
         Estudiante isEmailExists = this.repository.findByEmail(_estudiante.getEmail()).orElse(null);
         if(isEmailExists != null && isEmailExists.getId() != _estudiante.getId()){
             throw new RuntimeException("El email ya está registrado.");

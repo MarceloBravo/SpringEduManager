@@ -1,7 +1,8 @@
 package com.SpringEduManager.web.dto;
 
-import com.SpringEduManager.web.dto.validation.OnCreate;
-import com.SpringEduManager.web.dto.validation.OnUpdate;
+import com.SpringEduManager.common.validation.OnCreate;
+import com.SpringEduManager.common.validation.OnUpdate;
+import com.SpringEduManager.common.validation.ValidaEmail;
 import com.SpringEduManager.web.enums.RolesEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,14 +14,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserDTO {
-    @Null(groups = OnCreate.class)
-    @NotNull(groups = OnUpdate.class)
+    @Null(groups = OnCreate.class, message = "El ID no debe ser proporcionado al crear")
+    @NotNull(groups = OnUpdate.class, message = "El ID es obligatorio para actualizar")
     private Long id;
 
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "El nombre es obligatorio")
+    @Size(max = 100, groups = {OnCreate.class, OnUpdate.class}, message = "El nombre no puede exceder 100 caracteres")
     private String nombre;
 
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "El apellido es obligatorio")
+    @Size(max = 100, groups = {OnCreate.class, OnUpdate.class}, message = "El apellido no puede exceder 100 caracteres")
     private String apellido;
 
+    @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "El email es obligatorio")
+    @Size(max = 150, groups = {OnCreate.class, OnUpdate.class}, message = "El email no puede exceder 150 caracteres")
+    @ValidaEmail(groups = {OnCreate.class, OnUpdate.class})
     private String email;
 
     @JsonProperty("password")

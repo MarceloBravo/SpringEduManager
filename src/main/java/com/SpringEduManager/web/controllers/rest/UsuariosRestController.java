@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SpringEduManager.web.dto.UserDTO;
-import com.SpringEduManager.web.dto.validation.OnCreate;
+import com.SpringEduManager.common.validation.OnCreate;
 import com.SpringEduManager.web.services.usuarios.UserService;
 
 /**

@@ -1,7 +1,8 @@
 package com.SpringEduManager.web.dto;
 
-import com.SpringEduManager.web.dto.validation.OnCreate;
-import com.SpringEduManager.web.dto.validation.OnUpdate;
+import com.SpringEduManager.common.validation.OnCreate;
+import com.SpringEduManager.common.validation.OnUpdate;
+import com.SpringEduManager.common.validation.ValidaEmail;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class EstudianteDTO {
     
     @NotBlank(groups = {OnCreate.class, OnUpdate.class}, message = "El email es obligatorio")
     @Size(max = 150, groups = {OnCreate.class, OnUpdate.class}, message = "El email no puede exceder 150 caracteres")
+    @ValidaEmail(groups = {OnCreate.class, OnUpdate.class})
     private String email;
     
     // Constructor vacío

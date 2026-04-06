@@ -29,7 +29,8 @@ public class GlobalExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(
                     fieldError -> fieldError.getField(),
-                    fieldError -> "Datos no válidos" //fieldError.getDefaultMessage()
+                    //fieldError -> "Datos no válidos" //Mensaje Genérico
+                    fieldError -> fieldError.getDefaultMessage()  // Muestra los mensajes configurados en los DTO o en su defecto los mensajes de validación por defecto
                 ));
         
         return ResponseEntity
