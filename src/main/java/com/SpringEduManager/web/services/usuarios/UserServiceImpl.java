@@ -21,6 +21,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Obtiene todos los usuarios de la base de datos.
+     * @return Lista de UserDTO con todos los usuarios
+     */
     @Override
     public List<UserDTO> getAll(){
         List<Usuario> users = this.repository.findAll();
@@ -30,6 +34,11 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    /**
+     * Busca usuarios por nombre (case insensitive).
+     * @param nombre Nombre o parte del nombre a buscar
+     * @return Lista de UserDTO que coinciden con la búsqueda
+     */
     @Override
     public List<UserDTO> getAll(String nombre){
         List<Usuario> users = this.repository.findByNombreContainingIgnoreCase(nombre);
@@ -39,6 +48,11 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    /**
+     * Busca un usuario por su ID.
+     * @param id ID del usuario a buscar
+     * @return UserDTO del usuario encontrado o null si no existe
+     */
     @Override
     public UserDTO findById(Long id){
         Usuario user = this.repository.findById(id).orElse(null);
@@ -48,6 +62,11 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
+    /**
+     * Busca un usuario por su email.
+     * @param email Email del usuario a buscar
+     * @return UserDTO del usuario encontrado o null si no existe
+     */
     @Override
     public UserDTO findByEmail(String email){
         Usuario user = this.repository.findByEmail(email).orElse(null);
@@ -57,6 +76,14 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
+    /**
+     * Guarda un nuevo usuario o actualiza uno existente.
+     * Para nuevos usuarios: el password es obligatorio.
+     * Para actualizaciones: el password es opcional (si no se envía, mantiene el actual).
+     * @param _user UserDTO con los datos del usuario
+     * @return ID del usuario guardado
+     * @throws RuntimeException si hay errores de validación
+     */
     @Override
     public Long save(UserDTO _user){
         this.validaDatosObligatorios(_user);
@@ -75,6 +102,11 @@ public class UserServiceImpl implements UserService {
         return this.repository.save(user).getId();
     }
 
+    /**
+     * Elimina un usuario por su ID.
+     * @param id ID del usuario a eliminar
+     * @throws RuntimeException si el usuario no existe
+     */
     @Override
     public void delete(Long id){
         Usuario user = this.repository.findById(id).orElse(null);
@@ -87,6 +119,11 @@ public class UserServiceImpl implements UserService {
 
     /* **** Funciones de validación de datos **** */
 
+    /**
+     * Valida que los campos obligatorios del usuario no estén vacíos.
+     * @param user UserDTO a validar
+     * @throws RuntimeException si hay campos obligatorios vacíos
+     */
     private void validaDatosObligatorios(UserDTO user){
         boolean isOk = true;
         if(user.getNombre() == null || user.getNombre().trim().isEmpty()){
@@ -106,6 +143,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Valida que el email no esté duplicado.
+     * @param _user UserDTO con el email a validar
+     * @throws RuntimeException si el email ya está registrado por otro usuario
+     */
     private void validaEmail(UserDTO _user){
         // Regex estándar para validación de email
         String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
@@ -123,6 +165,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Valida y procesa el password del usuario.
+     * Para actualizaciones: si no se envía password, usa el existente.
+     * Para nuevos usuarios: el password es obligatorio.
+     * @param _user UserDTO con los datos del usuario
+     * @return Password codificado o password existente
+     * @throws RuntimeException si el password es obligatorio y no se proporcionó
+     */
     private String validaPassword(UserDTO _user){
         String password = null;
         Usuario user = this.repository.findById(_user.getId()).orElse(null);

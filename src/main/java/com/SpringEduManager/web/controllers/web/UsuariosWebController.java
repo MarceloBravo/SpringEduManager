@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.services.usuarios.UserService;
 
+/**
+ * Controlador web para la gestión de usuarios con vistas Thymeleaf.
+ * Proporciona endpoints para operaciones CRUD con interfaz web.
+ * Todas las vistas utilizan el motor de plantillas Thymeleaf.
+ */
 @Controller
 @RequestMapping("/users")
 public class UsuariosWebController {
@@ -21,6 +26,13 @@ public class UsuariosWebController {
     @Autowired
     private UserService userService;
     
+    /**
+     * Muestra el listado de usuarios con opcional filtro por nombre.
+     * GET /users/list/{filtro}
+     * @param filtro Filtro opcional para buscar por nombre (case insensitive)
+     * @param model Modelo para pasar datos a la vista
+     * @return Nombre de la plantilla Thymeleaf
+     */
     @GetMapping("/list/{filtro}")
     public String getAll(@PathVariable(name = "filtro", required = false) String filtro, Model model){
         try{
@@ -40,6 +52,12 @@ public class UsuariosWebController {
 
     }
 
+    /**
+     * Muestra el formulario para crear un nuevo usuario.
+     * GET /users/new
+     * @param model Modelo para pasar datos a la vista
+     * @return Nombre de la plantilla del formulario
+     */
     @GetMapping("/new")
     public String goToNewUserForm(Model model){
         try{
@@ -51,6 +69,13 @@ public class UsuariosWebController {
         }
     }
 
+    /**
+     * Guarda un nuevo usuario en el sistema.
+     * POST /users/save
+     * @param user UserDTO con los datos del nuevo usuario
+     * @param model Modelo para pasar mensajes a la vista
+     * @return Redirect al listado u página de error
+     */
     @PostMapping("/save")
     public String saveNewUser(@ModelAttribute UserDTO user, Model model){
         try{
@@ -65,6 +90,13 @@ public class UsuariosWebController {
         return "redirect:/error";
     }
 
+    /**
+     * Muestra el formulario para editar un usuario existente.
+     * GET /users/{id}
+     * @param id ID del usuario a editar
+     * @param model Modelo para pasar datos a la vista
+     * @return Nombre de la plantilla de edición o redirect a error
+     */
     @GetMapping("/{id}")
     public String goToEditUserForm(@PathVariable Long id, Model model){
         try{
@@ -78,6 +110,14 @@ public class UsuariosWebController {
     }    
     
 
+    /**
+     * Actualiza un usuario existente.
+     * POST /users/update/{id}
+     * @param id ID del usuario a actualizar
+     * @param _user UserDTO con los datos actualizados
+     * @param model Modelo para pasar mensajes a la vista
+     * @return Redirect al listado u página de error
+     */
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable(name = "id", required = true) Long id, @ModelAttribute UserDTO _user, Model model){
         try{
@@ -94,6 +134,13 @@ public class UsuariosWebController {
         return "redirect: /error";
     }
 
+    /**
+     * Elimina un usuario por su ID.
+     * POST /users/delete/{id}
+     * @param id ID del usuario a eliminar
+     * @param model Modelo para pasar mensajes a la vista
+     * @return Redirect al listado u página de error
+     */
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable(name = "id", required = true) Long id, Model model){
         try{

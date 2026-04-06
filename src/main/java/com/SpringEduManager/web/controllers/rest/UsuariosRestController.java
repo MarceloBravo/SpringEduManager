@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,14 +15,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SpringEduManager.web.dto.UserDTO;
+import com.SpringEduManager.web.dto.validation.OnCreate;
 import com.SpringEduManager.web.services.usuarios.UserService;
 
+/**
+ * Controlador REST para la gestión de usuarios vía API.
+ * Proporciona endpoints CRUD para operaciones con usuarios.
+ * Todas las respuestas siguen el formato: {"data": ...} o {"error": ...}
+ */
 @RestController
 public class UsuariosRestController {
 
     @Autowired
     private UserService userService;
 
+    /**
+     * Obtiene todos los usuarios o filtra por nombre.
+     * GET /api/users?filtro=nombre
+     * @param filtro Parámetro opcional para filtrar por nombre (case insensitive)
+     * @return Map con lista de usuarios o error
+     */
     @GetMapping("/api/users")
     public Map<String, List<UserDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
         try{
@@ -35,6 +48,12 @@ public class UsuariosRestController {
     }
 
     // GET /api/users/{id}
+    /**
+     * Busca un usuario por su ID.
+     * GET /api/users/{id}
+     * @param id ID del usuario a buscar
+     * @return Map con datos del usuario o mensaje de error
+     */
     @GetMapping("/api/users/{id}")
     public Map<String, Object> getById(@PathVariable("id") Long id){
         try{
@@ -50,8 +69,14 @@ public class UsuariosRestController {
     }
 
     // POST /api/users/
+    /**
+     * Crea un nuevo usuario en el sistema.
+     * POST /api/users
+     * @param user UserDTO con los datos del nuevo usuario (validado con @Validated)
+     * @return Map con mensaje de éxito y usuario creado, o error
+     */
     @PostMapping("/api/users")
-    public Map<String, Object> save(@RequestBody UserDTO user){
+    public Map<String, Object> save(@Validated(OnCreate.class) @RequestBody UserDTO user){
         try{
             Long id = this.userService.save(user);
             UserDTO newUser = this.userService.findById(id);
@@ -66,6 +91,13 @@ public class UsuariosRestController {
     }
 
     // PUT /api/users/{id}
+    /**
+     * Actualiza un usuario existente.
+     * PUT /api/users/{id}
+     * @param id ID del usuario a actualizar
+     * @param user UserDTO con los datos a actualizar (validado con @Validated)
+     * @return Map con mensaje de éxito y usuario actualizado, o error
+     */
     @PutMapping("/api/users/{id}")
     public Map<String, Object> update(@PathVariable("id") Long id, @RequestBody UserDTO user){
         try{
@@ -83,6 +115,12 @@ public class UsuariosRestController {
     }
 
     // DELETE /api/users/{id}    
+    /**
+     * Elimina un usuario por su ID.
+     * DELETE /api/users/{id}
+     * @param id ID del usuario a eliminar
+     * @return Map con mensaje de éxito o error
+     */
     @DeleteMapping("/api/users/{id}")
     public Map<String, String> delete(@PathVariable("id") Long id){
         try{
