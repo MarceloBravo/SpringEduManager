@@ -6,6 +6,7 @@ import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.enums.RolesEnum;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<Usuario, Long> {
     //findAll()
@@ -18,7 +19,7 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
     
     List<Usuario> findByApellidoContainingIgnoreCase(String apellido);
 
-    Usuario findByEmail(String email);
+    Optional<Usuario> findByEmail(String email);
 
     List<Usuario> findByRole(RolesEnum role);
 }

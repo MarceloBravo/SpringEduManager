@@ -11,13 +11,13 @@ public abstract class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
     @Column(name = "nombre", length = 100, nullable = false)
-    private String nombre;
+    protected String nombre;
     @Column(name="apellido", length = 100, nullable = false)
-    private String apellido;
+    protected String apellido;
     @Column(name="email", length = 100, nullable = false)
-    private String email;
+    protected String email;
 
     public Persona() {
     }
@@ -26,6 +26,14 @@ public abstract class Persona {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
+    public void setId(Long id){
+        this.id = id;
     }
 
     public String getNombre() {

@@ -1,15 +1,33 @@
 package com.SpringEduManager.web.dto;
 
+import com.SpringEduManager.web.dto.validation.OnCreate;
+import com.SpringEduManager.web.dto.validation.OnUpdate;
 import com.SpringEduManager.web.enums.RolesEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserDTO {
+    @Null(groups = OnCreate.class)
+    @NotNull(groups = OnUpdate.class)
     private Long id;
+
     private String nombre;
+
     private String apellido;
+
     private String email;
-    @JsonIgnore    
+
+    @JsonProperty("password")
+    @NotBlank(groups = OnCreate.class, message = "La contraseña es obligatoria")
+    @Size(min = 8, groups = OnCreate.class)
     private String password;
+    
     private RolesEnum role;
     
     public UserDTO() {
@@ -56,6 +74,7 @@ public class UserDTO {
         this.email = email;
     }
     
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

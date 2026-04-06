@@ -1,5 +1,4 @@
 package com.SpringEduManager.web.entities;
-
 import com.SpringEduManager.web.enums.RolesEnum;
 
 import jakarta.persistence.Column;
@@ -8,7 +7,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="usuarios")
-public class Usuario extends Persona {
+public class Usuario extends Persona {    
     @Column(name="password", length = 100, nullable = false)
     private String password;
     @Column(name="role", nullable = false)
