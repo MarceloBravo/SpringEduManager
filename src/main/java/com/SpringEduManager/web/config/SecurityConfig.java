@@ -26,7 +26,7 @@ public class SecurityConfig {
             .requestMatchers("/users/**").hasAnyRole(RolesEnum.ADMIN.name())
             .requestMatchers("/students/**").hasAnyRole(RolesEnum.ADMIN.name())
             .requestMatchers("/course/**").hasAnyRole(RolesEnum.ADMIN.name())
-            .requestMatchers("/evaluations/**").hasAnyRole(RolesEnum.ADMIN.name())
+            .requestMatchers("/evaluations/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.TEACHER.name())
             .requestMatchers("/api/**").permitAll()
             .anyRequest()
             .authenticated()
