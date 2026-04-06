@@ -1,8 +1,6 @@
 package com.SpringEduManager.web.services.estudiantes;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,17 +153,6 @@ public class EstudianteServiceImpl implements EstudianteService {
      * @throws RuntimeException si el email ya está registrado por otro estudiante o no es válido
      */
     private void validaEmail(EstudianteDTO _estudiante){
-        /*
-        // Regex estándar para validación de email
-        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-        
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(_estudiante.getEmail());
-        
-        if(!matcher.matches()){
-            throw new RuntimeException("El email no es válido.");
-        }
-         */
         Estudiante isEmailExists = this.repository.findByEmail(_estudiante.getEmail()).orElse(null);
         if(isEmailExists != null && isEmailExists.getId() != _estudiante.getId()){
             throw new RuntimeException("El email ya está registrado.");

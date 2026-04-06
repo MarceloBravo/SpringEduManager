@@ -10,9 +10,6 @@ import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.repositories.UserRepository;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 @Service
 public class UserServiceImpl implements UserService {
 
