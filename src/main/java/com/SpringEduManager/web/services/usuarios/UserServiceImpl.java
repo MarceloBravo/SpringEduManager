@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.entities.Usuario;
+import com.SpringEduManager.web.enums.RolesEnum;
 import com.SpringEduManager.web.repositories.UserRepository;
 
 @Service
@@ -97,6 +98,17 @@ public class UserServiceImpl implements UserService {
         user.setPassword(pwd);
         user.setRole(_user.getRole());
         return this.repository.save(user).getId();
+    }
+
+    /**
+     * Registra un nuevo usuario con rol por defecto USER.
+     * Asigna automáticamente el rol USER antes de guardar el usuario.
+     * @param userDTO DTO con los datos del nuevo usuario a registrar
+     */
+    @Override
+    public void register(UserDTO userDTO) {
+        userDTO.setRole(RolesEnum.USER);
+        this.save(userDTO);
     }
 
     /**

@@ -26,7 +26,7 @@ public class SecurityConfig {
             .requestMatchers("/users/**").hasAnyRole(RolesEnum.ADMIN.name())
             .requestMatchers("/estudiantes/**").hasAnyRole(RolesEnum.ADMIN.name())
             .requestMatchers("/cursos/**").hasAnyRole(RolesEnum.ADMIN.name())
-            .requestMatchers("/evaluations/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.TEACHER.name())
+            .requestMatchers("/evaluaciones/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.TEACHER.name())
             .requestMatchers("/api/**").permitAll()
             .anyRequest()
             .authenticated()
@@ -35,6 +35,7 @@ public class SecurityConfig {
         .formLogin(form -> form
             .loginPage("/login")
             .defaultSuccessUrl("/dashboard", true)
+            .failureUrl("/login?error")
             .permitAll()
         )
         .logout(logout -> logout

@@ -3,7 +3,8 @@ package com.SpringEduManager.web.enums;
 public enum RolesEnum {
     ADMIN(  "ADMIN"),
     TEACHER("TEACHER"),
-    STUDENT("STUDENT");
+    STUDENT("STUDENT"),
+    USER("USER");
     
     private final String role;
     
