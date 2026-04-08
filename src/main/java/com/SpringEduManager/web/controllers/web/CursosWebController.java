@@ -98,7 +98,7 @@ public class CursosWebController {
      * @return Nombre de la plantilla de edición o redirect a error
      */
     @GetMapping("/{id}")
-    public String goToEditCursoForm(@PathVariable Long id, Model model){
+    public String goToEditCursoForm(@PathVariable(required = true) Long id, Model model){
         try{
             CursoDTO curso = this.cursoService.findById(id);
             model.addAttribute("curso", curso);

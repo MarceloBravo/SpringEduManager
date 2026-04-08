@@ -98,7 +98,7 @@ public class UsuariosWebController {
      * @return Nombre de la plantilla de edición o redirect a error
      */
     @GetMapping("/{id}")
-    public String goToEditUserForm(@PathVariable Long id, Model model){
+    public String goToEditUserForm(@PathVariable(required = true) Long id, Model model){
         try{
             UserDTO user = this.userService.findById(id);
             model.addAttribute("user", user);

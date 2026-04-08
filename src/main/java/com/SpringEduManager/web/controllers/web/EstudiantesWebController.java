@@ -98,7 +98,7 @@ public class EstudiantesWebController {
      * @return Nombre de la plantilla de edición o redirect a error
      */
     @GetMapping("/{id}")
-    public String goToEditEstudianteForm(@PathVariable Long id, Model model){
+    public String goToEditEstudianteForm(@PathVariable(required = true) Long id, Model model){
         try{
             EstudianteDTO estudiante = this.estudianteService.findById(id);
             model.addAttribute("estudiante", estudiante);

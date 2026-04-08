@@ -1,7 +1,6 @@
 package com.SpringEduManager.web.entities;
 
 import java.sql.Date;
-import java.text.DecimalFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +19,7 @@ public class Evaluacion {
     private Long id;
 
     @Column(name="nota")
-    private DecimalFormat nota;
+    private Double nota;
 
     @Column(name="fecha")
     private Date fecha;
@@ -31,6 +30,13 @@ public class Evaluacion {
 
     public Evaluacion(){}
 
+    public Evaluacion(Long id, Double nota, Date fecha, EstudianteCurso estudianteCurso) {
+        this.id = id;
+        this.nota = nota;
+        this.fecha = fecha;
+        this.estudianteCurso = estudianteCurso;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -40,11 +46,11 @@ public class Evaluacion {
         this.id = id;
     }
 
-    public DecimalFormat getNota() {
+    public Double getNota() {
         return nota;
     }
 
-    public void setNota(DecimalFormat nota) {
+    public void setNota(Double nota) {
         this.nota = nota;
     }
 
