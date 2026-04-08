@@ -26,12 +26,9 @@ public class RegistroDeUsuarioWebController {
     @PostMapping
     public String register(UserDTO userDTO) {
         try{
-            System.out.println("Registrando usuario ");
             userService.save(userDTO);
-            System.out.println("Usuario registrado exitosamente");
             return "redirect:/login";
         }catch(Exception e){
-            System.out.println("Error: " + e.getMessage());
             return "redirect:/error";
         }
         

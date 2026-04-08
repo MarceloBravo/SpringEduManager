@@ -82,8 +82,6 @@ public class EstudiantesCursosController {
     @PostMapping("/api/estudiantes-cursos")
     public Map<String, Object> create(@RequestBody EstudianteCursoRequestDTO request){
         try{
-            System.out.println("Estudiante ID: " + request.estudianteId());
-            System.out.println("Curso ID: " + request.cursoId());
             Long id = estudianteCursoService.save(request.estudianteId(), request.cursoId());
             if(id == null){
                 return Map.of("error", "No se pudo asignar el estudiante al curso");

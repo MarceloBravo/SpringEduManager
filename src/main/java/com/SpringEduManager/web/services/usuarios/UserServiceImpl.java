@@ -84,26 +84,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Long save(UserDTO _user){
-        System.out.println("Validando datos");
         this.validaDatosObligatorios(_user);
-        System.out.println("Validando email");
         this.validaEmail(_user);
-        System.out.println("Validando password");
         String pwd = this.validaPassword(_user);
-        System.out.println("Creando usuario");
         Usuario user = new Usuario();
-        System.out.println("Asignando ID");
         if(_user.getId() != null){
             user.setId(_user.getId());
         }
-        System.out.println("Asignando nombre");
         user.setNombre(_user.getNombre());
-        System.out.println("Asignando apellido");
         user.setApellido(_user.getApellido());
         user.setEmail(_user.getEmail());
         user.setPassword(pwd);
         user.setRole(_user.getRole());
-        System.out.println("Nuevo Usuario: " + user.getNombre() + " " + user.getApellido() + " " + user.getEmail() + " " + user.getPassword() + " " + user.getRole());
         return this.repository.save(user).getId();
     }
 
