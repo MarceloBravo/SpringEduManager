@@ -1,6 +1,7 @@
 package com.SpringEduManager.web.services.estudiantes;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -154,7 +155,7 @@ public class EstudianteServiceImpl implements EstudianteService {
      */
     private void validaEmail(EstudianteDTO _estudiante){
         Estudiante isEmailExists = this.repository.findByEmail(_estudiante.getEmail()).orElse(null);
-        if(isEmailExists != null && isEmailExists.getId() != _estudiante.getId()){
+        if(isEmailExists != null && !Objects.equals(isEmailExists.getId(), _estudiante.getId())){
             throw new RuntimeException("El email ya está registrado.");
         }
     }

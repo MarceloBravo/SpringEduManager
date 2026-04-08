@@ -1,6 +1,7 @@
 package com.SpringEduManager.web.controllers.web;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -123,7 +124,7 @@ public class EstudiantesWebController {
         try{
             _estudiante.setId(id);
             Long result = this.estudianteService.save(_estudiante);
-            if(result == _estudiante.getId()){
+            if(Objects.equals(result, _estudiante.getId())){
                 model.addAttribute("estudiante", _estudiante);
                 model.addAttribute("message", "Estudiante actualizado exitosamente");
                 return "redirect: /estudiantes/list";

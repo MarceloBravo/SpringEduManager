@@ -1,6 +1,7 @@
 package com.SpringEduManager.web.services.usuarios;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -158,7 +159,7 @@ public class UserServiceImpl implements UserService {
      */
     private void validaEmail(UserDTO _user){
         Usuario isEmailExists = this.repository.findByEmail(_user.getEmail()).orElse(null);
-        if(isEmailExists != null && isEmailExists.getId() != _user.getId()){
+        if(isEmailExists != null && !Objects.equals(isEmailExists.getId(), _user.getId())){
             throw new RuntimeException("El email ya está registrado.");
         }
     }
