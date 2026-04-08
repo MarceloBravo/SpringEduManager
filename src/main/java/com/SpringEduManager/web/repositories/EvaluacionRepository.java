@@ -21,7 +21,7 @@ public interface EvaluacionRepository extends JpaRepository<Evaluacion, Long> {
      * @param estudianteId Identificador único del estudiante
      * @return Lista de evaluaciones del estudiante ordenadas por fecha
      */
-    List<Evaluacion> findByEstudianteId(Long estudianteId);
+    List<Evaluacion> findByEstudianteCurso_EstudianteId(Long estudianteId);
 
     /**
      * Busca todas las evaluaciones asociadas a un curso específico.
@@ -29,5 +29,5 @@ public interface EvaluacionRepository extends JpaRepository<Evaluacion, Long> {
      * @param cursoId Identificador único del curso
      * @return Lista de evaluaciones del curso ordenadas por fecha
      */
-    List<Evaluacion> findByCursoId(Long cursoId);
+    List<Evaluacion> findByEstudianteCurso_CursoId(Long cursoId);
 }

@@ -56,7 +56,7 @@ public class EvaluacionesServiceImpl implements EvaluacionesService  {
      */
     @Override
     public List<EvaluacionDTO> getByEstudianteId(Long estudianteId) {
-        List<Evaluacion> evaluaciones = this.evalRepository.findByEstudianteId(estudianteId);
+        List<Evaluacion> evaluaciones = this.evalRepository.findByEstudianteCurso_EstudianteId(estudianteId);
         return evaluaciones
             .stream()
             .map(eval -> new EvaluacionDTO(
@@ -74,7 +74,7 @@ public class EvaluacionesServiceImpl implements EvaluacionesService  {
      */
     @Override
     public List<EvaluacionDTO> getByCursoId(Long cursoId) {
-        List<Evaluacion> evaluaciones = this.evalRepository.findByCursoId(cursoId);
+        List<Evaluacion> evaluaciones = this.evalRepository.findByEstudianteCurso_CursoId(cursoId);
         return evaluaciones
             .stream()
             .map(eval -> new EvaluacionDTO(

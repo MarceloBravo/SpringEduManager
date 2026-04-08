@@ -1,0 +1,37 @@
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.signature-gradient {
+    background: linear-gradient(135deg, #0058cf 0%, #036cfb 100%);
+}
+
+.glass-panel {
+    background: rgba(248, 249, 250, 0.7);
+    backdrop-filter: blur(12px);
+}
+
+.ghost-border {
+    border: 1px solid rgba(173, 179, 181, 0.15);
+}
+
+input:focus {
+    outline: none;
+    border-color: #0058cf !important;
+    box-shadow: 0 0 0 4px rgba(0, 88, 207, 0.1);
+}
+
+.form-control{
+    border-radius: 10px !important;
+    padding-left: 50px !important;
+    border-color: #ced4da !important;
+}
+
+.w-full.max-w-md{
+    max-width: 40rem;
+}
+
+.md\:flex {
+    display: flex;
+    align-items: center;
+}

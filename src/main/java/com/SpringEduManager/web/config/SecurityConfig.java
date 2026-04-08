@@ -33,13 +33,15 @@ public class SecurityConfig {
         )
         .csrf(csrf -> csrf.disable())
         .formLogin(form -> form
-            .loginPage("/login")
+            //.loginPage("/login")
+            .usernameParameter("email")
+            .passwordParameter("password")
             .defaultSuccessUrl("/dashboard", true)
-            .failureUrl("/login?error")
+            //.failureUrl("/login?error")
             .permitAll()
         )
         .logout(logout -> logout
-            .logoutSuccessUrl("/logout?logout")
+            //.logoutSuccessUrl("/login?logout")
             .permitAll()
         );
         return http.build();
