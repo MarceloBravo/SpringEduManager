@@ -66,14 +66,14 @@
                             <tr class="border-b">
                                 <th class="px-4 py-2 text-left">Nombre</th>
                                 <th class="px-4 py-2 text-left">Descripción</th>
-                                <th class="px-4 py-2 text-left">Acciones</th>
+                                <th class="px-4 py-2 text-left col-actions">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="curso : ${cursos}" class="border-b hover:bg-gray-50">
                                 <td class="px-4 py-2" th:text="${curso.nombre}">Matemáticas</td>
                                 <td class="px-4 py-2" th:text="${curso.descripcion}">Curso de matemáticas básicas</td>
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2 col-actions">
                                     <a th:href="@{/cursos/{id}(id=${curso.id})}" class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded ml-2">
                                         <i class="material-symbols-outlined">edit</i>
                                     </a>
