@@ -3,6 +3,8 @@ import com.SpringEduManager.web.enums.RolesEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 @Entity
@@ -11,6 +13,7 @@ public class Usuario extends Persona {
     @Column(name="password", length = 100, nullable = false)
     private String password;
     @Column(name="role", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private RolesEnum role;
 
     public Usuario(){        

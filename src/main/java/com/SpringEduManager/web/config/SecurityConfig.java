@@ -7,8 +7,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.SpringEduManager.web.enums.RolesEnum;
-
 @Configuration
 public class SecurityConfig {
 
@@ -25,10 +23,10 @@ public class SecurityConfig {
             .permitAll()
             .requestMatchers("/login", "/register", "/api/users")
             .permitAll()
-            .requestMatchers("/estudiantes/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.USER.name())
-            .requestMatchers("/users/**").hasAnyRole(RolesEnum.ADMIN.name())
-            .requestMatchers("/cursos/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.USER.name())
-            .requestMatchers("/evaluaciones/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.TEACHER.name())
+            .requestMatchers("/estudiantes/**").hasAnyRole("ADMIN", "USER")
+            .requestMatchers("/users/**").hasAnyRole("ADMIN")
+            .requestMatchers("/cursos/**").hasAnyRole("ADMIN", "USER")
+            .requestMatchers("/evaluaciones/**").hasAnyRole("ADMIN", "TEACHER")
             .requestMatchers("/api/**").permitAll()
             .anyRequest()
             .authenticated()

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.services.usuarios.UserService;
@@ -29,14 +31,15 @@ public class UsuariosWebController {
     
     /**
      * Muestra el listado de usuarios con opcional filtro por nombre.
-     * GET /users/list/{filtro}
+     * GET /users/list
      * @param filtro Filtro opcional para buscar por nombre (case insensitive)
      * @param model Modelo para pasar datos a la vista
      * @return Nombre de la plantilla Thymeleaf
      */
-    @GetMapping("/list/{filtro}")
-    public String getAll(@PathVariable(name = "filtro", required = false) String filtro, Model model){
+    @GetMapping("/list")
+    public String getAll(@RequestParam(name = "filtro", required = false) String filtro, Model model, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(model);
             List<UserDTO> users = null;
             if(filtro != null && !filtro.isEmpty()){
                 users = userService.getAll(filtro);
@@ -45,12 +48,17 @@ public class UsuariosWebController {
             }
             model.addAttribute("users", users);
             model.addAttribute("filtro", filtro);
-            return "users/list";
+            
+            // Pasar mensajes flash al template si existen
+            if(redirectAttributes.getFlashAttributes().containsKey("message")) {
+                model.addAttribute("message", redirectAttributes.getFlashAttributes().get("message"));
+                model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
+            }
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el listado de registros");
-            return "redirect:/error";
+            model.addAttribute("message", "Ocurrió un error al buscar el listado de registros");
+            model.addAttribute("code", 500);
         }
-
+        return "usuarios/list";
     }
 
     /**
@@ -62,11 +70,13 @@ public class UsuariosWebController {
     @GetMapping("/new")
     public String goToNewUserForm(Model model){
         try{
+            setMenuAttribute(model);
             model.addAttribute("user", new UserDTO());
-            return "users/new";
+            return "usuarios/form";
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al cargar el formulario");
-            return "redirect:/error";
+            model.addAttribute("message", "Ocurrió un error al cargar el formulario");
+            model.addAttribute("code", 500);
+            return "redirect:/users/list";
         }
     }
 
@@ -78,17 +88,21 @@ public class UsuariosWebController {
      * @return Redirect al listado u página de error
      */
     @PostMapping("/save")
-    public String saveNewUser(@ModelAttribute UserDTO user, Model model){
+    public String saveNewUser(@ModelAttribute UserDTO user, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(redirectAttributes);
             Long id = this.userService.save(user);
             if(id != null){
-                model.addAttribute("message", "Usuario creado exitosamente");
-                return "redirect: /users/list";
+                redirectAttributes.addFlashAttribute("message", "Usuario " + (user.getId() != null ? "actualizado" : "creado") + " exitosamente");
+                redirectAttributes.addFlashAttribute("code", 200);
+                return "redirect:/users/list";
             }
+            throw new RuntimeException("Ocurrió un error al grabar el usuario");
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al crear el usuario");
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("code", 500);
+            return "redirect:/users/form";
         }
-        return "redirect:/error";
     }
 
     /**
@@ -99,16 +113,18 @@ public class UsuariosWebController {
      * @return Nombre de la plantilla de edición o redirect a error
      */
     @GetMapping("/{id}")
-    public String goToEditUserForm(@PathVariable(required = true) Long id, Model model){
+    public String goToEditUserForm(@PathVariable(name = "id", required = true) Long id, Model model){
         try{
+            setMenuAttribute(model);
             UserDTO user = this.userService.findById(id);
             model.addAttribute("user", user);
-            return "users/edit";
+            return "usuarios/form";
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el usuario a editar");
-            return "redirect:/error";
+            model.addAttribute("message", "Ocurrió un error al buscar el usuario a editar");
+            model.addAttribute("code", 500);
+            return "redirect:/users/list";
         }
-    }    
+    }
     
 
     /**
@@ -117,42 +133,60 @@ public class UsuariosWebController {
      * @param id ID del usuario a actualizar
      * @param _user UserDTO con los datos actualizados
      * @param model Modelo para pasar mensajes a la vista
-     * @return Redirect al listado u página de error
+     * @return Redirect al listado o página de error
      */
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable(name = "id", required = true) Long id, @ModelAttribute UserDTO _user, Model model){
+    public String updateUser(@PathVariable(name = "id", required = true) Long id, @ModelAttribute UserDTO _user, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(redirectAttributes);
             _user.setId(id);
             Long result = this.userService.save(_user);
             if(Objects.equals(result, _user.getId())){
-                model.addAttribute("user", _user);
-                model.addAttribute("message", "Usuario actualizado exitosamente");
-                return "redirect: /users/list";
+                redirectAttributes.addFlashAttribute("message", "Usuario actualizado exitosamente");
+                redirectAttributes.addFlashAttribute("code", 200);
+                return "redirect:/users/list";
             }
+            throw new RuntimeException("Ocurrió un error al actualizar el usuario");
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al actualizar el usuario");
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("code", 500);
         }
-        return "redirect: /error";
+        return "redirect:/users/form";
     }
 
     /**
      * Elimina un usuario por su ID.
-     * POST /users/delete/{id}
+     * POST /users/delete
      * @param id ID del usuario a eliminar
      * @param model Modelo para pasar mensajes a la vista
      * @return Redirect al listado u página de error
      */
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable(name = "id", required = true) Long id, Model model){
+    @PostMapping("/delete")
+    public String deleteUser(@RequestParam(name = "id", required = true) Long id, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(redirectAttributes);
             this.userService.delete(id);
-            model.addAttribute("message", "Usuario eliminado exitosamente");
-            return "redirect: /users/list";
+            redirectAttributes.addFlashAttribute("message", "Usuario eliminado exitosamente");
+            redirectAttributes.addFlashAttribute("code", 200);
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al eliminar el usuario");
+            // Verificar si es un error de constraint violation (clave externa)
+            if(e.getCause() != null && e.getCause().getCause() instanceof java.sql.SQLIntegrityConstraintViolationException) {
+                redirectAttributes.addFlashAttribute("message", "No se puede eliminar el usuario porque tiene registros asociados");
+                redirectAttributes.addFlashAttribute("code", 400);
+            } else {
+                redirectAttributes.addFlashAttribute("message", e.getMessage());
+                redirectAttributes.addFlashAttribute("code", 500);
+            }
         }
-        return "redirect: /error";
+        return "redirect:/users/list";
     }
 
-
+    private void setMenuAttribute(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("menu","usuarios");
+    }
+    
+    private void setMenuAttribute(Model model) {
+        model.addAttribute("menu","usuarios");
+    }
+    
 }

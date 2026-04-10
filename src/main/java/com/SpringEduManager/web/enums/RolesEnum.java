@@ -1,18 +1,49 @@
 package com.SpringEduManager.web.enums;
 
 public enum RolesEnum {
-    ADMIN(  "ADMIN"),
-    TEACHER("TEACHER"),
-    STUDENT("STUDENT"),
-    USER("USER");
+    ADMIN(1, "ROLE_ADMIN"),
+    TEACHER(2, "ROLE_TEACHER"),
+    STUDENT(3, "ROLE_STUDENT"),
+    USER(4, "ROLE_USER");
     
-    private final String role;
+    private final int role;
+    private final String authority;
     
-    RolesEnum(String role) {
+    RolesEnum(int role, String authority) {
         this.role = role;
+        this.authority = authority;
     }
     
-    public String getRole() {
+    public int getRole() {
         return role;
+    }
+    
+    public String getAuthority() {
+        return authority;
+    }
+    
+    // Método para obtener el enum a partir del valor numérico
+    public static RolesEnum fromRole(int role) {
+        for (RolesEnum r : RolesEnum.values()) {
+            if (r.role == role) {
+                return r;
+            }
+        }
+        throw new IllegalArgumentException("Rol no válido: " + role);
+    }
+    
+    // Método para obtener el enum a partir del nombre (para compatibilidad)
+    public static RolesEnum fromString(String roleName) {
+        try {
+            return RolesEnum.valueOf(roleName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Rol no válido: " + roleName);
+        }
+    }
+    
+    // Sobrescribir name() para que Spring Security funcione correctamente
+    @Override
+    public String toString() {
+        return this.name();
     }
 }

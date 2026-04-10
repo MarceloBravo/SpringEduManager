@@ -72,9 +72,9 @@
                         </thead>
                         <tbody>
                             <tr th:each="estudiante : ${estudiantes}" class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-2" th:text="${estudiante.nombre}">Juan</td>
-                                <td class="px-4 py-2" th:text="${estudiante.apellido}">Pérez</td>
-                                <td class="px-4 py-2" th:text="${estudiante.email}">juan@example.com</td>
+                                <td class="px-4 py-2" th:text="${estudiante.nombre}"></td>
+                                <td class="px-4 py-2" th:text="${estudiante.apellido}"></td>
+                                <td class="px-4 py-2" th:text="${estudiante.email}"></td>
                                 <td class="px-4 py-2 col-actions">
                                     <a th:href="@{/estudiantes/{id}(id=${estudiante.id})}" class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded ml-2">
                                         <i class="material-symbols-outlined">edit</i>

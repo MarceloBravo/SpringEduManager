@@ -91,7 +91,7 @@ public class EstudiantesWebController {
             }
             throw new RuntimeException("Ocurrió un error al grabar el estudiante");
         }catch(Exception e){
-            redirectAttributes.addFlashAttribute("message", "Ocurrió un error al grabar el estudiante");
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("code", 500);
             return "redirect:/estudiantes/form";
         }
@@ -113,7 +113,7 @@ public class EstudiantesWebController {
             model.addAttribute("code", 200);
             return "estudiantes/form";
         }catch(Exception e){
-            model.addAttribute("message", "Ocurrió un error al buscar el estudiante a editar");
+            model.addAttribute("message", e.getMessage());
             model.addAttribute("code", 500);
             return "redirect:/estudiantes/list";
         }
@@ -141,7 +141,7 @@ public class EstudiantesWebController {
             }
             throw new RuntimeException("Ocurrió un error al actualizar el estudiante");
         }catch(Exception e){
-            redirectAttributes.addFlashAttribute("message", "Ocurrió un error al actualizar el estudiante");
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("code", 500);
             return "redirect:/estudiantes/form";
         }
@@ -167,7 +167,7 @@ public class EstudiantesWebController {
                 redirectAttributes.addFlashAttribute("message", "No se puede eliminar el estudiante porque tiene cursos asociados");
                 redirectAttributes.addFlashAttribute("code", 400);
             } else {
-                redirectAttributes.addFlashAttribute("message", "Ocurrió un error al eliminar el estudiante");
+                redirectAttributes.addFlashAttribute("message", e.getMessage());
                 redirectAttributes.addFlashAttribute("code", 500);
             }
         }
