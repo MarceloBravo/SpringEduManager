@@ -37,7 +37,7 @@
         </a>
         <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'cursos'} ? 'active-menu' : ''"
-            href="#">
+            th:href="@{/cursos/list}">
             <span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>
             <span class="font-medium text-sm">Cursos</span>
         </a>
