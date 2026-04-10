@@ -1,0 +1,29 @@
+.modal{
+    background: #0000008c;
+}
+
+.find-modal{
+    height: 90vh;
+}
+
+.find-modal > .modal-content{
+    height: stretch;
+    padding: 2em;
+}
+
+.tr-select{
+    cursor: pointer;
+}
+
+.tr-select:hover{
+    cursor: pointer;
+    background-color: rgb(168, 174, 248);
+}
+
+.table-container{
+    overflow: auto;
+}
+
+#feedback-alert-js{
+    display: none;
+}

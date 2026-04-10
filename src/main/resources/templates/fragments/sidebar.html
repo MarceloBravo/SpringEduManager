@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="sidebar"
+    class="fixed left-0 top-0 h-full w-64 bg-[#f1f4f5] dark:bg-slate-950 border-r border-slate-200/15 shadow-sm flex flex-col py-6 z-50">
+    <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white">
+                <span class="material-symbols-outlined" data-icon="school">school</span>
+            </div>
+            <div>
+                <h1 class="font-headline font-bold text-[#1B4965] leading-none"><title>Spring EduManagement</title></h1>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mt-1">Portal de administración
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="flex-1 flex flex-col space-y-1">
+        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'dashboard'} ? 'active-menu' : ''"
+            href="#">
+            <span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+            <span class="font-medium text-sm">Dashboard</span>
+        </a>
+        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'usuarios'} ? 'active-menu' : ''"
+            href="#">
+            <span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+            <span class="font-medium text-sm">Usuarios</span>
+        </a>        
+        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'estudiantes'} ? 'active-menu' : ''"
+            th:href="@{/estudiantes/list}">
+            <span class="material-symbols-outlined mr-3" data-icon="school">school</span>
+            <span class="font-medium text-sm">Estudiantes</span>
+        </a>
+        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'cursos'} ? 'active-menu' : ''"
+            href="#">
+            <span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>
+            <span class="font-medium text-sm">Cursos</span>
+        </a>
+        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'matriculas'} ? 'active-menu' : ''"
+            href="#">
+            <span class="material-symbols-outlined mr-3" data-icon="how_to_reg">how_to_reg</span>
+            <span class="font-medium text-sm">Matriculas</span>
+        </a>
+        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'notas'} ? 'active-menu' : ''"
+            href="#">
+            <span class="material-symbols-outlined mr-3" data-icon="grade">grade</span>
+            <span class="font-medium text-sm">Notas</span>
+        </a>
+    </div>
+</aside>

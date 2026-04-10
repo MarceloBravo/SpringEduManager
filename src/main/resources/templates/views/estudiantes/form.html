@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Spring EduManagement</title>
+    <!-- Tailwind CSS with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Manrope & Inter -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Theme Configuration -->
+    
+    <link rel="stylesheet" href="/css/estudiantes-list.css" />
+    
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/modal.css" type="text/css" />
+
+    <script src="/js/toast.js"></script>
+    <script src="/js/modal.js"></script>
+    <script id="tailwind-config" src="/js/estudiantes-form.js"></script>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen">
+    <!-- Barra de Menú lateral -->
+    <div th:replace="~{../fragments/toast :: toast}"></div>
+    <div th:replace="~{../fragments/modal :: modal}"></div>
+    <div th:replace="~{../fragments/sidebar :: sidebar}"></div>
+    
+    <!-- Contenido Principal -->
+    <main class="ml-64 p-8">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold mb-6">Mantenedor de Estudiantes</h1>
+            
+            <form th:object="${estudiante}" th:action="@{/estudiantes/save}" id="saveForm" method="post">
+                <input type="hidden" th:field="*{id}" />
+                <div class="form-group row">
+                    <label for="input-nombre" class="col-sm-2 col-form-label text-color">Nombre</label>
+                    <div class="col-sm-10">
+                        <input 
+                            type="text" 
+                            class="form-control input-box" 
+                            id="input-nombre" 
+                            placeholder="Nombre"
+                            maxlength="100"
+                            required
+                            th:field="*{nombre}"
+                        >
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="input-apellido" class="col-sm-2 col-form-label text-color">Apellido</label>
+                    <div class="col-sm-10">
+                        <input 
+                            type="text" 
+                            class="form-control input-box" 
+                            id="input-apellido" 
+                            placeholder="Apellido"
+                            maxlength="100"
+                            required
+                            th:field="*{apellido}"
+                        >
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="input-email" class="col-sm-2 col-form-label text-color">Email</label>
+                    <div class="col-sm-10">
+                        <input 
+                            type="email" 
+                            class="form-control input-box" 
+                            id="input-email" 
+                            placeholder="Email"
+                            maxlength="100"
+                            required
+                            th:field="*{email}"
+                        >
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+
+                        <button 
+                            type="button" 
+                            class="btn btn-primary" 
+                            th:onclick="'grabarClick(' + ${estudiante.id} + ')'"
+                        >Guardar</button>
+
+                        <button 
+                            type="button" 
+                            class="btn btn-danger" 
+                            th:onclick="'eliminarClick(' + ${estudiante.id} + ')'"
+                            th:disabled="${estudiante.id == null}"
+                        >Eliminar</button>
+                        
+                        <a type="button" class="btn btn-primary" th:href="@{/estudiantes/list}">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+
+            <form 
+                th:action="@{/estudiantes/delete}" 
+                method="post" 
+                id="deleteForm"
+                style="display: none;">
+                <input type="hidden" id="delete-id" name="id" th:value="${estudiante.id}">
+            </form>
+
+        </div>
+    </main>
+</body>
+
+</html>

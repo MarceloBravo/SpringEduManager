@@ -1,0 +1,36 @@
+
+/*
+const btnCancelar = document.getElementById("btn-modal-cancelar");
+
+btnCancelar.addEventListener("click", (e) => {
+    const modal = document.getElementsByClassName("modal")[0];
+    modal.style.display = "none";
+});
+*/
+
+const hideModal = () => {
+    const modal = document.getElementsByClassName("modal")[0];
+    modal.style.display = "none";
+}
+
+const showModal = (formId, id = null, title = "Información", message = "", btnAceptarText = "Aceptar", btnCancelarText = "Cancelar") => {
+    const modal = document.getElementsByClassName("modal")[0];
+    modal.style.display = "block";
+    document.getElementById("modal-title").innerHTML =title;
+    document.getElementById("modal-message").innerHTML = message;
+    document.getElementById("btn-modal-aceptar").innerHTML = btnAceptarText;
+    document.getElementById("btn-modal-cancelar").innerHTML = btnCancelarText;
+    
+    
+    const btnAceptar = document.getElementById("btn-modal-aceptar");
+    btnAceptar.addEventListener("click", (e) => {
+        hideModal();
+        if(id){
+            document.getElementById("delete-id").value = id;
+        }
+        document.getElementById(formId).submit();
+    });
+
+    const btnCancelar = document.getElementById("btn-modal-cancelar");
+    btnCancelar.addEventListener("click", () => { hideModal(); });
+}

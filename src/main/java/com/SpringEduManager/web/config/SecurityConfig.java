@@ -21,10 +21,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/login","/register","/css/**","/js/**","/api/users")
+            .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico")
             .permitAll()
-            .requestMatchers("/users/**").hasAnyRole(RolesEnum.ADMIN.name())
+            .requestMatchers("/login", "/register", "/api/users")
+            .permitAll()
             .requestMatchers("/estudiantes/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.USER.name())
+            .requestMatchers("/users/**").hasAnyRole(RolesEnum.ADMIN.name())
             .requestMatchers("/cursos/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.USER.name())
             .requestMatchers("/evaluaciones/**").hasAnyRole(RolesEnum.ADMIN.name(), RolesEnum.TEACHER.name())
             .requestMatchers("/api/**").permitAll()

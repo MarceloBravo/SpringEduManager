@@ -1,0 +1,11 @@
+.bg-primary-container,
+.dark\:bg-slate-950 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(241 244 245 / var(--tw-bg-opacity, 1)) !important;
+}
+
+.active-menu {
+    background: white;
+    border-radius: 10px 0px 0px 10px;
+    margin-left: 24px;
+}

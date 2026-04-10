@@ -1,0 +1,15 @@
+.text-color{
+    font-family: 'Inter', sans-serif;
+    --tw-text-opacity: 1;
+    color: rgb(27 73 101 / var(--tw-text-opacity, 1));
+}
+
+.input-box{
+    border-color: #bec3cb !important;
+    padding: 0.4rem !important;
+    border-radius: 5px !important;
+}
+
+.btn-primary{
+    background-color: #365e77 !important;
+}
