@@ -89,9 +89,7 @@ public class EstudiantesWebController {
                 redirectAttributes.addFlashAttribute("code", 200);
                 return "redirect:/estudiantes/list";
             }
-            redirectAttributes.addFlashAttribute("message", "Ocurrió un error al grabar el estudiante");
-            redirectAttributes.addFlashAttribute("code", 500);
-            return "redirect:/estudiantes/form";
+            throw new RuntimeException("Ocurrió un error al grabar el estudiante");
         }catch(Exception e){
             redirectAttributes.addFlashAttribute("message", "Ocurrió un error al grabar el estudiante");
             redirectAttributes.addFlashAttribute("code", 500);
@@ -108,8 +106,8 @@ public class EstudiantesWebController {
      */
     @GetMapping("/{id}")
     public String goToEditEstudianteForm(@PathVariable(name = "id", required = true) Long id, Model model){
-        setMenuAttribute(model);
         try{
+            setMenuAttribute(model);
             EstudianteDTO estudiante = this.estudianteService.findById(id);
             model.addAttribute("estudiante", estudiante);
             model.addAttribute("code", 200);
@@ -132,8 +130,8 @@ public class EstudiantesWebController {
      */
     @PostMapping("/update/{id}")
     public String updateEstudiante(@PathVariable(name = "id", required = true) Long id, @ModelAttribute EstudianteDTO _estudiante, RedirectAttributes redirectAttributes){
-        setMenuAttribute(redirectAttributes);
         try{
+            setMenuAttribute(redirectAttributes);
             _estudiante.setId(id);
             Long result = this.estudianteService.save(_estudiante);
             if(Objects.equals(result, _estudiante.getId())){
@@ -141,13 +139,12 @@ public class EstudiantesWebController {
                 redirectAttributes.addFlashAttribute("code", 200);
                 return "redirect:/estudiantes/list";
             }
-            redirectAttributes.addFlashAttribute("message", "Ocurrió un error al actualizar el estudiante");
-            redirectAttributes.addFlashAttribute("code", 500);
+            throw new RuntimeException("Ocurrió un error al actualizar el estudiante");
         }catch(Exception e){
             redirectAttributes.addFlashAttribute("message", "Ocurrió un error al actualizar el estudiante");
             redirectAttributes.addFlashAttribute("code", 500);
+            return "redirect:/estudiantes/form";
         }
-        return "redirect:/estudiantes/form";
     }
 
     /**
@@ -159,8 +156,8 @@ public class EstudiantesWebController {
      */
     @PostMapping("/delete")
     public String deleteEstudiante(@RequestParam(name = "id", required = true) Long id, RedirectAttributes redirectAttributes){
-        setMenuAttribute(redirectAttributes);
         try{
+            setMenuAttribute(redirectAttributes);
             this.estudianteService.delete(id);
             redirectAttributes.addFlashAttribute("message", "Estudiante eliminado exitosamente");
             redirectAttributes.addFlashAttribute("code", 200);

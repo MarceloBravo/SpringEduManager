@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.SpringEduManager.web.dto.CursoDTO;
 import com.SpringEduManager.web.services.cursos.CursoService;
@@ -28,13 +30,13 @@ public class CursosWebController {
     
     /**
      * Muestra el listado de cursos con opcional filtro por nombre.
-     * GET /cursos/list/{filtro}
+     * GET /cursos/list
      * @param filtro Filtro opcional para buscar por nombre (case insensitive)
      * @param model Modelo para pasar datos a la vista
      * @return Nombre de la plantilla Thymeleaf
      */
-    @GetMapping("/list/{filtro}")
-    public String getAll(@PathVariable(name = "filtro", required = false) String filtro, Model model){
+    @GetMapping("/list")
+    public String getAll(@RequestParam(name = "filtro", required = false) String filtro, Model model, RedirectAttributes redirectAttributes){
         try{
             List<CursoDTO> cursos = null;
             if(filtro != null && !filtro.isEmpty()){
@@ -44,11 +46,16 @@ public class CursosWebController {
             }
             model.addAttribute("cursos", cursos);
             model.addAttribute("filtro", filtro);
-            return "cursos/list";
+            if(redirectAttributes.getFlashAttributes().containsKey("message")) {
+               model.addAttribute("message", redirectAttributes.getFlashAttributes().get("message"));
+               model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
+           }
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el listado de registros");
-            return "redirect:/error";
+            model.addAttribute("message", "Ocurrió un error al buscar el listado de registros");
+            model.addAttribute("code", 500);
         }
+        setMenuAttribute(model);
+        return "cursos/list";
 
     }
 
@@ -61,11 +68,13 @@ public class CursosWebController {
     @GetMapping("/new")
     public String goToNewCursoForm(Model model){
         try{
+            setMenuAttribute(model);
             model.addAttribute("curso", new CursoDTO());
             return "cursos/new";
         }catch(Exception e){
             model.addAttribute("error", "Ocurrió un error al cargar el formulario");
-            return "redirect:/error";
+            model.addAttribute("code", 500);
+            return "redirect:/cursos/list";
         }
     }
 
@@ -77,17 +86,21 @@ public class CursosWebController {
      * @return Redirect al listado u página de error
      */
     @PostMapping("/save")
-    public String saveNewCurso(@ModelAttribute CursoDTO curso, Model model){
+    public String saveNewCurso(@ModelAttribute CursoDTO curso, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(redirectAttributes);
             Long id = this.cursoService.save(curso);
             if(id != null){
-                model.addAttribute("message", "Curso creado exitosamente");
-                return "redirect: /cursos/list";
+                redirectAttributes.addFlashAttribute("message", "Curso creado exitosamente");
+                redirectAttributes.addFlashAttribute("code", 200);
+                return "redirect:/cursos/list";
             }
+            throw new RuntimeException("Ocurrió un error al grabar el curso");
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al crear el curso");
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("code", 500);
+            return "redirect:/cursos/form";
         }
-        return "redirect:/error";
     }
 
     /**
@@ -100,12 +113,15 @@ public class CursosWebController {
     @GetMapping("/{id}")
     public String goToEditCursoForm(@PathVariable(required = true) Long id, Model model){
         try{
+            setMenuAttribute(model);
             CursoDTO curso = this.cursoService.findById(id);
             model.addAttribute("curso", curso);
+            model.addAttribute("code", 200);
             return "cursos/edit";
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el curso a editar");
-            return "redirect:/error";
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("code", 500);
+            return "redirect:/cursos/list";
         }
     }
     
@@ -119,20 +135,22 @@ public class CursosWebController {
      * @return Redirect al listado o página de error
      */
     @PostMapping("/update/{id}")
-    public String updateCurso(@PathVariable(name = "id", required = true) Long id, @ModelAttribute CursoDTO _curso, Model model){
+    public String updateCurso(@PathVariable(name = "id", required = true) Long id, @ModelAttribute CursoDTO _curso, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(redirectAttributes);
             _curso.setId(id);
             Long result = this.cursoService.save(_curso);
             if(result == _curso.getId()){
-                model.addAttribute("curso", _curso);
-                model.addAttribute("message", "Curso actualizado exitosamente");
-                return "redirect: /cursos/list";
+                redirectAttributes.addFlashAttribute("curso", _curso);
+                redirectAttributes.addFlashAttribute("message", "Curso actualizado exitosamente");
+                return "redirect:/cursos/list";
             }
-            model.addAttribute("error", "Ocurrió un error al actualizar el curso");
+            throw new RuntimeException("Ocurrió un error al actualizar el curso");
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al actualizar el curso");
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("code", 500);
+            return "redirect:/cursos/form";
         }
-        return "redirect:/error";
     }
 
     /**
@@ -142,16 +160,32 @@ public class CursosWebController {
      * @param model Modelo para pasar mensajes a la vista
      * @return Redirect al listado u página de error
      */
-    @PostMapping("/delete/{id}")
-    public String deleteCurso(@PathVariable(name = "id", required = true) Long id, Model model){
+    @PostMapping("/delete")
+    public String deleteCurso(@RequestParam(name = "id", required = true) Long id, RedirectAttributes redirectAttributes){
         try{
+            setMenuAttribute(redirectAttributes);
             this.cursoService.delete(id);
-            model.addAttribute("message", "Curso eliminado exitosamente");
-            return "redirect: /cursos/list";
+            redirectAttributes.addAttribute("message", "Curso eliminado exitosamente");
+            redirectAttributes.addFlashAttribute("code", 200);
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al eliminar el curso");
+            // Verificar si es un error de constraint violation (clave externa)
+            if(e.getCause() != null && e.getCause().getCause() instanceof java.sql.SQLIntegrityConstraintViolationException) {
+                redirectAttributes.addFlashAttribute("message", "No se puede eliminar el estudiante porque tiene cursos asociados");
+                redirectAttributes.addFlashAttribute("code", 400);
+            } else {
+                redirectAttributes.addAttribute("error", e.getMessage());
+                redirectAttributes.addFlashAttribute("code", 500);
+            }
         }
-        return "redirect:/error";
+        return "redirect:/cursos/list";
+    }
+
+    private void setMenuAttribute(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("menu","estudiantes");
+    }
+    
+    private void setMenuAttribute(Model model) {
+        model.addAttribute("menu","estudiantes");
     }
     
 }

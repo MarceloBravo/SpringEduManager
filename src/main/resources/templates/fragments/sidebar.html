@@ -18,10 +18,10 @@
     </div>
     <div class="flex-1 flex flex-col space-y-1">
         <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
-            th:classappend="${menu == 'dashboard'} ? 'active-menu' : ''"
-            href="#">
-            <span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
-            <span class="font-medium text-sm">Dashboard</span>
+            th:classappend="${menu == 'home'} ? 'active-menu' : ''"
+            th:href="@{/home}">
+            <span class="material-symbols-outlined mr-3" data-icon="home">home</span>
+            <span class="font-medium text-sm">home</span>
         </a>
         <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'usuarios'} ? 'active-menu' : ''"
