@@ -2,6 +2,8 @@ package com.SpringEduManager.web.services.cursos;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.SpringEduManager.web.dto.CursoDTO;
 
 public interface CursoService {
@@ -11,6 +13,8 @@ public interface CursoService {
      * @return Lista de CursoDTO con todos los cursos
      */
     List<CursoDTO> getAll();
+
+    Page<CursoDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy);
     
     /**
      * Busca cursos por nombre (case insensitive)

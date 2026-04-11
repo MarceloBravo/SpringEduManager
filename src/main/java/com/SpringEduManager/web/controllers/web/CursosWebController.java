@@ -1,7 +1,6 @@
 package com.SpringEduManager.web.controllers.web;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,16 +35,27 @@ public class CursosWebController {
      * @return Nombre de la plantilla Thymeleaf
      */
     @GetMapping("/list")
-    public String getAll(@RequestParam(name = "filtro", required = false) String filtro, Model model, RedirectAttributes redirectAttributes){
+    public String getAll(
+        @RequestParam(name = "filtro", required = false) String filtro, 
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
+        @RequestParam(name = "sortBy", defaultValue = "") String sortBy,
+        Model model, 
+        RedirectAttributes redirectAttributes
+    ){
         try{
-            List<CursoDTO> cursos = null;
-            if(filtro != null && !filtro.isEmpty()){
-                cursos = cursoService.getAll(filtro);
-            }else{
-                cursos = cursoService.getAll();
-            }
-            model.addAttribute("cursos", cursos);
+            Page<CursoDTO> cursos = null;
+            cursos = cursoService.searchInAllFields(filtro, page, size, sortBy);
+
+            model.addAttribute("cursos", cursos.getContent());
             model.addAttribute("filtro", filtro);
+            model.addAttribute("page", page);
+            model.addAttribute("size", cursos.getSize());
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("totalPages", cursos.getTotalPages());
+            model.addAttribute("totalElements", cursos.getTotalElements());
+            model.addAttribute("url", "cursos");
+            
             if(redirectAttributes.getFlashAttributes().containsKey("message")) {
                model.addAttribute("message", redirectAttributes.getFlashAttributes().get("message"));
                model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));

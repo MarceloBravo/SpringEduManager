@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
 
 import com.SpringEduManager.web.dto.CursoDTO;
 import com.SpringEduManager.common.validation.OnCreate;
@@ -36,12 +37,16 @@ public class CursosRestController {
      * @return Map con lista de cursos o error
      */
     @GetMapping("/api/cursos")
-    public Map<String, List<CursoDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
+    public Map<String, List<CursoDTO>> getAll(
+        @RequestParam(name= "filtro", required=false) String filtro,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
+        @RequestParam(name = "sortBy", defaultValue = "") String sortBy
+    ){
         try{
-            if(filtro != null && !filtro.isEmpty()){
-                return Map.of("data", cursoService.getAll(filtro));
-            }
-            return Map.of("data", cursoService.getAll());
+            Page<CursoDTO> cursos = null;
+            cursos = cursoService.searchInAllFields(filtro, page, size, sortBy);
+            return Map.of("data", cursos.getContent());
         }catch(Exception e){
             return Map.of("error", List.of());
         }

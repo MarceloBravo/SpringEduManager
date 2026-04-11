@@ -3,6 +3,10 @@ package com.SpringEduManager.web.services.cursos;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.SpringEduManager.web.dto.CursoDTO;
@@ -31,6 +35,24 @@ public class CursoServiceImpl implements CursoService {
                 ))
                 .toList();
     }
+
+
+    public Page<CursoDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy){
+        sortBy = (sortBy == null || sortBy.isEmpty()) ? "nombre" : sortBy;
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<Curso> userPage;
+        
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            userPage = repository.findAll(pageable);
+        } else {
+            userPage = repository.searchInMultipleFields(searchTerm, pageable);
+        }
+        
+        return userPage.map(this::convertToDTO);
+    }
+
+
 
     /**
      * Busca cursos por nombre (case insensitive).
@@ -146,5 +168,16 @@ public class CursoServiceImpl implements CursoService {
         if(isNombreExists != null && isNombreExists.getId() != _curso.getId()){
             throw new RuntimeException("El nombre del curso ya está registrado.");
         }
+    }
+
+    /**
+     * Convierte Usuario a UserDTO
+     */
+    private CursoDTO convertToDTO(Curso curso) {
+        CursoDTO dto = new CursoDTO();
+        dto.setId(curso.getId());
+        dto.setNombre(curso.getNombre());
+        dto.setDescripcion(curso.getDescripcion());
+        return dto;
     }
 }

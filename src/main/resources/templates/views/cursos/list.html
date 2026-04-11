@@ -64,8 +64,31 @@
                     <table class="min-w-full table-auto">
                         <thead>
                             <tr class="border-b">
-                                <th class="px-4 py-2 text-left">Nombre</th>
-                                <th class="px-4 py-2 text-left">Descripción</th>
+                                <th class="px-4 py-2 text-left">
+                                    <a th:href="
+                                        @{/cursos/list(
+                                            page=${page > 0 ? page - 1 : 0}, 
+                                            size=${pageSize}, 
+                                            sortBy='nombre', 
+                                            dir=${sortField == 'nombre' and sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}
+                                    ">
+                                        Nombre
+                                    </a>
+                                </th>
+                                <th class="px-4 py-2 text-left">
+                                    <a th:href="
+                                        @{/cursos/list(
+                                            page=${page > 0 ? page - 1 : 0}, 
+                                            size=${pageSize}, 
+                                            sortBy='descripcion', 
+                                            dir=${sortField == 'descripcion' and sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}
+                                    ">
+                                        Descripción
+                                    </a>
+                                </th>
+                                
                                 <th class="px-4 py-2 text-left col-actions">Acciones</th>
                             </tr>
                         </thead>
@@ -87,6 +110,16 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-left">
+                        <div th:replace="~{../fragments/pagination :: pagination}"></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mt-4 text-sm text-gray-600 text-right">
+                            Página <span th:text="${page + 1}">1</span> de <span th:text="${totalPages}">1</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
