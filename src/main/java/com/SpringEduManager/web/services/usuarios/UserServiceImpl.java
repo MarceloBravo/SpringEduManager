@@ -1,6 +1,5 @@
 package com.SpringEduManager.web.services.usuarios;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
@@ -42,20 +41,6 @@ public class UserServiceImpl implements UserService {
         }
         
         return userPage.map(this::convertToDTO);
-    }
-
-    /**
-     * Busca usuarios por nombre (case insensitive).
-     * @param nombre Nombre o parte del nombre a buscar
-     * @return Lista de UserDTO que coinciden con la búsqueda
-     */
-    @Override
-    public List<UserDTO> getAll(String nombre){
-        List<Usuario> users = this.repository.findByNombreContainingIgnoreCase(nombre);
-        return users
-                .stream()
-                .map(user -> new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), user.getRole()))
-                .toList();
     }
 
     /**
