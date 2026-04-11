@@ -30,6 +30,16 @@ public class CursosRestController {
     @Autowired
     private CursoService cursoService;
 
+
+    @GetMapping("/api/cursos/all")
+    public Map<String, List<CursoDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
+        try{
+            return Map.of("data", cursoService.getAll(filtro));
+        }catch(Exception e){
+            return Map.of("error", List.of());
+        }
+    }
+
     /**
      * Obtiene todos los cursos o filtra por nombre.
      * GET /api/cursos?filtro=nombre
@@ -37,7 +47,7 @@ public class CursosRestController {
      * @return Map con lista de cursos o error
      */
     @GetMapping("/api/cursos")
-    public Map<String, List<CursoDTO>> getAll(
+    public Map<String, List<CursoDTO>> getPage(
         @RequestParam(name= "filtro", required=false) String filtro,
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "10") int size,

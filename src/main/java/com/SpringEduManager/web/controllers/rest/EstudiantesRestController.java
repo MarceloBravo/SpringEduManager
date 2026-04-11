@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
 
 import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.common.validation.OnCreate;
@@ -35,13 +36,25 @@ public class EstudiantesRestController {
      * @param filtro Parámetro opcional para filtrar por nombre (case insensitive)
      * @return Map con lista de estudiantes o error
      */
-    @GetMapping("/api/estudiantes")
+    @GetMapping("/api/estudiantes/all")
     public Map<String, List<EstudianteDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
         try{
-            if(filtro != null && !filtro.isEmpty()){
-                return Map.of("data", estudianteService.getAll(filtro));
-            }
-            return Map.of("data", estudianteService.getAll());
+            return Map.of("data", estudianteService.getAll(filtro));
+        }catch(Exception e){
+            return Map.of("error", List.of());
+        }
+    }
+    
+    @GetMapping("/api/estudiantes")
+    public Map<String, List<EstudianteDTO>> getPage(
+        @RequestParam(name= "filtro", required=false) String filtro,
+        @RequestParam(name= "page", defaultValue = "0") int page,
+        @RequestParam(name= "size", defaultValue = "10") int size,
+        @RequestParam(name= "sortBy", defaultValue = "") String sortBy
+        ){
+        try{
+            Page<EstudianteDTO> estudiante = estudianteService.searchInAllFields(filtro, page, size, sortBy);
+            return Map.of("data", estudiante.getContent());
         }catch(Exception e){
             return Map.of("error", List.of());
         }

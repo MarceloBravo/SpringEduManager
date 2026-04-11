@@ -8,20 +8,16 @@ import com.SpringEduManager.web.dto.CursoDTO;
 
 public interface CursoService {
     
-    /**
-     * Obtiene todos los cursos
-     * @return Lista de CursoDTO con todos los cursos
-     */
-    List<CursoDTO> getAll();
-
-    Page<CursoDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy);
+    
     
     /**
-     * Busca cursos por nombre (case insensitive)
      * @param nombre Nombre o parte del nombre a buscar
      * @return Lista de CursoDTO que coinciden con la búsqueda
      */
     List<CursoDTO> getAll(String nombre);
+
+
+    Page<CursoDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy);
     
     /**
      * Busca un curso por su ID

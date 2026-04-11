@@ -2,6 +2,8 @@ package com.SpringEduManager.web.services.estudiantes;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.SpringEduManager.web.dto.EstudianteDTO;
 
 public interface EstudianteService {
@@ -11,6 +13,8 @@ public interface EstudianteService {
      * @return Lista de EstudianteDTO con todos los estudiantes
      */
     List<EstudianteDTO> getAll();
+
+    Page<EstudianteDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy);
     
     /**
      * Busca estudiantes por nombre (case insensitive)

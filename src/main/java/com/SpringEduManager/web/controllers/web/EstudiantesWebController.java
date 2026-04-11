@@ -1,6 +1,5 @@
 package com.SpringEduManager.web.controllers.web;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.Page;
 
 import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.web.services.estudiantes.EstudianteService;
@@ -31,17 +31,25 @@ public class EstudiantesWebController {
     
 
     @GetMapping("/list")
-    public String getAll(@RequestParam(name = "filtro", required = false) String filtro, Model model, RedirectAttributes redirectAttributes){
-        List<EstudianteDTO> estudiantes = null;
+    public String getAll(
+        @RequestParam(name = "filtro", required = false) String filtro,
+        @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+        @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+        @RequestParam(name = "sortBy", required = false, defaultValue = "nombre") String sortBy,
+        Model model, RedirectAttributes redirectAttributes
+    ){
+        Page<EstudianteDTO> estudiantes = null;
         
-        if(filtro != null && !filtro.isEmpty()){
-            estudiantes = estudianteService.getAll(filtro);
-        }else{
-            estudiantes = estudianteService.getAll();
-        }
+        estudiantes = estudianteService.searchInAllFields(filtro, page, size, sortBy);
         
         model.addAttribute("estudiantes", estudiantes);
         model.addAttribute("filtro", filtro);
+        model.addAttribute("page", page);
+        model.addAttribute("size", estudiantes.getSize());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("totalPages", estudiantes.getTotalPages());
+        model.addAttribute("totalElements", estudiantes.getTotalElements());
+        model.addAttribute("url", "estudiantes");
         
         // Pasar mensajes flash al template si existen
         if(redirectAttributes.getFlashAttributes().containsKey("message")) {

@@ -1,5 +1,6 @@
 package com.SpringEduManager.web.services.usuarios;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
@@ -22,6 +23,27 @@ public class UserServiceImpl implements UserService {
     private UserRepository repository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Override
+    public List<UserDTO> getAll(String nombre){
+        List<Usuario> usuarios;
+        if(nombre == null || nombre.isEmpty()){
+            usuarios = this.repository.findAll();
+        }else{
+            usuarios = this.repository.findByNombreContainingIgnoreCase(nombre);
+        }
+        return usuarios
+                .stream()
+                .map(usuario -> new UserDTO(
+                    usuario.getId(), 
+                    usuario.getNombre(), 
+                    usuario.getApellido(),
+                    usuario.getEmail(),
+                    usuario.getPassword(),
+                    usuario.getRole()
+                ))
+                .toList();
+    }
 
     /**
      * Obtiene todos los usuarios de la base de datos.

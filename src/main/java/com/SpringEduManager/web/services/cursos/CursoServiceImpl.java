@@ -19,13 +19,20 @@ public class CursoServiceImpl implements CursoService {
     @Autowired
     private CursoRepository repository;
 
+    
     /**
-     * Obtiene todos los cursos de la base de datos.
-     * @return Lista de CursoDTO con todos los cursos
+     * Busca cursos por nombre (case insensitive).
+     * @param nombre Nombre o parte del nombre a buscar
+     * @return Lista de CursoDTO que coinciden con la búsqueda
      */
     @Override
-    public List<CursoDTO> getAll(){
-        List<Curso> cursos = this.repository.findAll();
+    public List<CursoDTO> getAll(String nombre){
+        List<Curso> cursos;
+        if(nombre == null || nombre.isEmpty()){
+            cursos = this.repository.findAll();
+        }else{
+            cursos = this.repository.findByNombreContainingIgnoreCase(nombre);
+        }        
         return cursos
                 .stream()
                 .map(curso -> new CursoDTO(
@@ -50,26 +57,6 @@ public class CursoServiceImpl implements CursoService {
         }
         
         return userPage.map(this::convertToDTO);
-    }
-
-
-
-    /**
-     * Busca cursos por nombre (case insensitive).
-     * @param nombre Nombre o parte del nombre a buscar
-     * @return Lista de CursoDTO que coinciden con la búsqueda
-     */
-    @Override
-    public List<CursoDTO> getAll(String nombre){
-        List<Curso> cursos = this.repository.findByNombreContainingIgnoreCase(nombre);
-        return cursos
-                .stream()
-                .map(curso -> new CursoDTO(
-                    curso.getId(), 
-                    curso.getNombre(), 
-                    curso.getDescripcion()
-                ))
-                .toList();
     }
 
     /**

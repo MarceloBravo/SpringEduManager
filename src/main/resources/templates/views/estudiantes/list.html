@@ -53,7 +53,7 @@
                 <form action="/estudiantes/list" method="get" class="form-search">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="input-search" class="sr-only">Buscar por:</label>
-                        <input type="text" class="form-control" id="input-search" name="filtro" th:value="${filtro}" placeholder="Buscar por nombre">
+                        <input type="text" class="form-control" id="input-search" name="filtro" th:value="${filtro}" placeholder="Valor buscado">
                         <button type="submit" class="btn btn-primary mb-2">Buscar</button>
                     </div>
                 </form>
@@ -64,9 +64,42 @@
                     <table class="min-w-full table-auto">
                         <thead>
                             <tr class="border-b">
-                                <th class="px-4 py-2 text-left">Nombre</th>
-                                <th class="px-4 py-2 text-left">Apellido</th>
-                                <th class="px-4 py-2 text-left">Email</th>
+                                <th class="px-4 py-2 text-left">
+                                    <a th:href="
+                                        @{/estudiantes/list(
+                                            page=${page > 0 ? page - 1 : 0}, 
+                                            size=${pageSize}, 
+                                            sortBy='nombre', 
+                                            dir=${sortField == 'nombre' and sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}
+                                    ">
+                                        Nombre
+                                    </a>
+                                </th>
+                                <th class="px-4 py-2 text-left">
+                                    <a th:href="
+                                        @{/estudiantes/list(
+                                            page=${page > 0 ? page - 1 : 0}, 
+                                            size=${pageSize}, 
+                                            sortBy='apellido', 
+                                            dir=${sortField == 'apellido' and sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}
+                                    ">
+                                        Apellido
+                                    </a>
+                                </th>
+                                <th class="px-4 py-2 text-left">
+                                    <a th:href="
+                                        @{/estudiantes/list(
+                                            page=0, 
+                                            size=${pageSize}, 
+                                            sortBy='email', 
+                                            dir=${sortField == 'email' and sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}
+                                    ">
+                                        Email
+                                    </a>
+                                </th>
                                 <th class="px-4 py-2 text-left col-actions">Acciones</th>
                             </tr>
                         </thead>
@@ -89,6 +122,16 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-left">
+                        <div th:replace="~{../fragments/pagination :: pagination}"></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mt-4 text-sm text-gray-600 text-right">
+                            Página <span th:text="${page + 1}">1</span> de <span th:text="${totalPages}">1</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

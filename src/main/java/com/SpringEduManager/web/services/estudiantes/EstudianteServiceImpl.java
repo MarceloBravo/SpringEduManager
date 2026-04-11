@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.web.entities.Estudiante;
 import com.SpringEduManager.web.repositories.EstudianteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 public class EstudianteServiceImpl implements EstudianteService {
@@ -32,6 +36,26 @@ public class EstudianteServiceImpl implements EstudianteService {
                     estudiante.getEmail()
                 ))
                 .toList();
+    }
+
+    public Page<EstudianteDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy){
+        sortBy = (sortBy == null || sortBy.isEmpty()) ? "nombre" : sortBy;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<Estudiante> estudiantePage;
+
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            estudiantePage = repository.findAll(pageable);
+        } else {
+            estudiantePage = repository.searchInMultipleFields(searchTerm, pageable);
+        }
+
+        return estudiantePage.map(estudiante -> new EstudianteDTO(
+            estudiante.getId(),
+            estudiante.getNombre(),
+            estudiante.getApellido(),
+            estudiante.getEmail()
+        ));
     }
 
     /**

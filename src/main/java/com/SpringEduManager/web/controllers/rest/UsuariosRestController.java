@@ -30,6 +30,15 @@ public class UsuariosRestController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/api/users/all")
+    public Map<String, List<UserDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
+        try{
+            return Map.of("data", userService.getAll(filtro));
+        }catch(Exception e){
+            return Map.of("error", List.of());
+        }
+    }
+
     /**
      * Obtiene todos los usuarios o filtra por nombre.
      * GET /api/users?filtro=nombre
@@ -37,7 +46,7 @@ public class UsuariosRestController {
      * @return Map con lista de usuarios o error
      */
     @GetMapping("/api/users")
-    public Map<String, List<UserDTO>> getAll(
+    public Map<String, List<UserDTO>> getPage(
         @RequestParam(name= "filtro", required=false) String filtro,
         @RequestParam(name= "page", required=false, defaultValue = "0") int page,
         @RequestParam(name= "size", required=false, defaultValue = "10") int size,

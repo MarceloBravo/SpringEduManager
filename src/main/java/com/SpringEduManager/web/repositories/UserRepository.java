@@ -20,7 +20,10 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
     //deleteById() - elimina por ID
     
     // Métodos personalizados (sin paginación)
+    List<Usuario> findByNombreContainingIgnoreCase(String nombre);
+
     Optional<Usuario> findByEmail(String email);
+    
     List<Usuario> findByRole(RolesEnum role);
         
     // Búsqueda con condiciones OR y paginación- Busca en nombre, apellido y email
