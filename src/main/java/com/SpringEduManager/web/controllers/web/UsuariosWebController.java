@@ -39,22 +39,26 @@ public class UsuariosWebController {
     @GetMapping("/list")
     public String getAll(
         @RequestParam(name = "filtro", required = false) String filtro, 
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "nombre") String sortBy,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
+        @RequestParam(name = "sortBy", defaultValue = "") String sortBy,
         Model model, 
         RedirectAttributes redirectAttributes
     ){
         try{
             setMenuAttribute(model);
             Page<UserDTO> users = null;
-            //if(filtro != null && !filtro.isEmpty()){
-            //    users = userService.getAll(filtro);
-            //}else{
+
             users = userService.searchInAllFields(filtro, page, size, sortBy);
-            //}
-            model.addAttribute("users", users);
+
+            model.addAttribute("users", users.getContent());
             model.addAttribute("filtro", filtro);
+            model.addAttribute("page", page);
+            model.addAttribute("size", users.getSize());
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("totalPages", users.getTotalPages());
+            model.addAttribute("totalElements", users.getTotalElements());
+            model.addAttribute("url", "users");
             
             // Pasar mensajes flash al template si existen
             if(redirectAttributes.getFlashAttributes().containsKey("message")) {

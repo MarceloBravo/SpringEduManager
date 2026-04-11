@@ -1,0 +1,64 @@
+{
+  "content": [
+    {
+      "id": 6,
+      "nombre": "Fernanda",
+      "apellido": "Pérez",
+      "email": "fer@email.com",
+      "role": "USER"
+    },
+    {
+      "id": 7,
+      "nombre": "Gabriel",
+      "apellido": "Gómez",
+      "email": "gabriel@email.com",
+      "role": "USER"
+    },
+    {
+      "id": 8,
+      "nombre": "Hilda",
+      "apellido": "Díaz",
+      "email": "hilda@email.com",
+      "role": "USER"
+    },
+    {
+      "id": 9,
+      "nombre": "Ignacio",
+      "apellido": "Torres",
+      "email": "ignacio@email.com",
+      "role": "ADMIN"
+    },
+    {
+      "id": 10,
+      "nombre": "Juana",
+      "apellido": "Ruiz",
+      "email": "juana@email.com",
+      "role": "USER"
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "empty": false,
+      "sorted": true,
+      "unsorted": false
+    },
+    "offset": 5,
+    "pageNumber": 1,
+    "pageSize": 5,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalElements": 12,
+  "totalPages": 3,
+  "last": false,
+  "first": false,
+  "numberOfElements": 5,
+  "size": 5,
+  "number": 1,
+  "sort": {
+    "empty": false,
+    "sorted": true,
+    "unsorted": false
+  },
+  "empty": false
+}

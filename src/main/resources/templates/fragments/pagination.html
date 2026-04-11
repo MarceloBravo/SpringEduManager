@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<!-- Controles de navegación de páginas -->
+<div th:fragment="pagination" th:if="${totalPages > 1}" class="mt-6 flex justify-center">
+    <nav class="flex items-center space-x-2">
+        <!-- Primera página -->
+        <a th:href="@{/${url}/list(page=0, size=${size}, sortBy=${sortBy})}" 
+            th:classappend="${page == 0} ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+            class="px-3 py-2 border rounded">
+            <span class="material-symbols-outlined">first_page</span>
+        </a>
+        
+        <!-- Página anterior -->
+        <a th:href="@{/${url}/list(page=${page - 1}, size=${size}, sortBy=${sortBy})}" 
+            th:if="${page > 0}"
+            class="px-3 py-2 border rounded hover:bg-gray-200">
+            <span class="material-symbols-outlined">chevron_left</span>
+        </a>
+        
+        <!-- Números de página -->
+        <div th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/${url}/list(page=${i}, size=${size}, sortBy=${sortBy})}" 
+                th:classappend="${i == page} ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'"
+                class="px-3 py-2 border rounded"
+                th:text="${i + 1}">1</a>
+        </div>
+        
+        <!-- Página siguiente -->
+        <a th:href="@{/${url}/list(page=${page + 1}, size=${size}, sortBy=${sortBy})}" 
+            th:if="${page < totalPages - 1}"
+            class="px-3 py-2 border rounded hover:bg-gray-200">
+            <span class="material-symbols-outlined">chevron_right</span>
+        </a>
+        
+        <!-- Última página -->
+        <a th:href="@{/${url}/list(page=${totalPages - 1}, size=${size}, sortBy=${sortBy})}" 
+            th:classappend="${page == totalPages - 1} ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+            class="px-3 py-2 border rounded">
+            <span class="material-symbols-outlined">last_page</span>
+        </a>
+    </nav>
+</div>

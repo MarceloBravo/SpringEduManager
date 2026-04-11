@@ -30,20 +30,15 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Page<UserDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy){
-        if(sortBy == null || sortBy.isEmpty()) {
-            sortBy = "nombre";
-        }
+        sortBy = (sortBy == null || sortBy.isEmpty()) ? "nombre" : sortBy;
         
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        
         Page<Usuario> userPage;
         
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             userPage = repository.findAll(pageable);
-            System.out.println("Búsqueda vacía - Retornando todos los usuarios. Página: " + page + ", Tamaño: " + size);
         } else {
             userPage = repository.searchInMultipleFields(searchTerm, pageable);
-            System.out.println("Búsqueda con término: '" + searchTerm + "'. Página: " + page + ", Tamaño: " + size);
         }
         
         return userPage.map(this::convertToDTO);

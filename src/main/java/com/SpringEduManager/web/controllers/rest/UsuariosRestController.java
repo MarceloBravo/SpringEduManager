@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.common.validation.OnCreate;
 import com.SpringEduManager.web.services.usuarios.UserService;
+import org.springframework.data.domain.Page;
 
 /**
  * Controlador REST para la gestión de usuarios vía API.
@@ -36,12 +37,15 @@ public class UsuariosRestController {
      * @return Map con lista de usuarios o error
      */
     @GetMapping("/api/users")
-    public Map<String, List<UserDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
+    public Map<String, List<UserDTO>> getAll(
+        @RequestParam(name= "filtro", required=false) String filtro,
+        @RequestParam(name= "page", required=false, defaultValue = "0") int page,
+        @RequestParam(name= "size", required=false, defaultValue = "10") int size,
+        @RequestParam(name= "sortBy", required=false, defaultValue = "nombre") String sortBy
+    ){
         try{
-            if(filtro != null && !filtro.isEmpty()){
-                return Map.of("data", userService.getAll(filtro));
-            }
-            return Map.of("data", userService.getAll());
+            Page<UserDTO> users = userService.searchInAllFields(filtro, page, size, sortBy);
+            return Map.of("data", users.getContent());
         }catch(Exception e){
             return Map.of("error", List.of());
         }
