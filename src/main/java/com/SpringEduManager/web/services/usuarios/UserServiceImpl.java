@@ -3,6 +3,7 @@ package com.SpringEduManager.web.services.usuarios;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.enums.RolesEnum;
 import com.SpringEduManager.web.repositories.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,12 +29,24 @@ public class UserServiceImpl implements UserService {
      * @return Lista de UserDTO con todos los usuarios
      */
     @Override
-    public List<UserDTO> getAll(){
-        List<Usuario> users = this.repository.findAll();
-        return users
-                .stream()
-                .map(user -> new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), user.getRole()))
-                .toList();
+    public Page<UserDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy){
+        if(sortBy == null || sortBy.isEmpty()) {
+            sortBy = "nombre";
+        }
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        
+        Page<Usuario> userPage;
+        
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            userPage = repository.findAll(pageable);
+            System.out.println("Búsqueda vacía - Retornando todos los usuarios. Página: " + page + ", Tamaño: " + size);
+        } else {
+            userPage = repository.searchInMultipleFields(searchTerm, pageable);
+            System.out.println("Búsqueda con término: '" + searchTerm + "'. Página: " + page + ", Tamaño: " + size);
+        }
+        
+        return userPage.map(this::convertToDTO);
     }
 
     /**
@@ -198,5 +214,20 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("El password no puede estar vacio");
         }
         return password;
+    }
+
+
+    /**
+     * Convierte Usuario a UserDTO
+     */
+    private UserDTO convertToDTO(Usuario usuario) {
+        UserDTO dto = new UserDTO();
+        dto.setId(usuario.getId());
+        dto.setNombre(usuario.getNombre());
+        dto.setApellido(usuario.getApellido());
+        dto.setEmail(usuario.getEmail());
+        dto.setRole(usuario.getRole());
+        // No incluir password en el DTO para seguridad
+        return dto;
     }
 }

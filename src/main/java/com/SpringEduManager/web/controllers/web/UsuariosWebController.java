@@ -1,6 +1,5 @@
 package com.SpringEduManager.web.controllers.web;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.services.usuarios.UserService;
+import org.springframework.data.domain.Page;
 
 /**
  * Controlador web para la gestión de usuarios con vistas Thymeleaf.
@@ -37,15 +37,22 @@ public class UsuariosWebController {
      * @return Nombre de la plantilla Thymeleaf
      */
     @GetMapping("/list")
-    public String getAll(@RequestParam(name = "filtro", required = false) String filtro, Model model, RedirectAttributes redirectAttributes){
+    public String getAll(
+        @RequestParam(name = "filtro", required = false) String filtro, 
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "nombre") String sortBy,
+        Model model, 
+        RedirectAttributes redirectAttributes
+    ){
         try{
             setMenuAttribute(model);
-            List<UserDTO> users = null;
-            if(filtro != null && !filtro.isEmpty()){
-                users = userService.getAll(filtro);
-            }else{
-                users = userService.getAll();
-            }
+            Page<UserDTO> users = null;
+            //if(filtro != null && !filtro.isEmpty()){
+            //    users = userService.getAll(filtro);
+            //}else{
+            users = userService.searchInAllFields(filtro, page, size, sortBy);
+            //}
             model.addAttribute("users", users);
             model.addAttribute("filtro", filtro);
             
