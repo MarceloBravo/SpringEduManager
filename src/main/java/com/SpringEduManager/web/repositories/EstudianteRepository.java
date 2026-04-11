@@ -45,4 +45,33 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
         @Param("search") String search,
         Pageable pageable
     );
+
+    // ===== MÉTODOS OPTIMIZADOS CON JOIN FETCH =====
+    
+    /**
+     * Obtiene un estudiante con sus cursos usando JOIN FETCH
+     * Evita el problema N+1 cargando los cursos en una sola consulta
+     */
+    @Query("SELECT DISTINCT e FROM Estudiante e " +
+           "LEFT JOIN FETCH e.cursos c " +
+           "WHERE e.id = :estudianteId")
+    Estudiante findEstudianteWithCursos(@Param("estudianteId") Long estudianteId);
+    
+    /**
+     * Obtiene estudiantes con sus cursos (paginado)
+     * Usar con cuidado - puede generar mucho datos
+     */
+    @Query("SELECT DISTINCT e FROM Estudiante e " +
+           "LEFT JOIN FETCH e.cursos c " +
+           "ORDER BY e.nombre ASC")
+    Page<Estudiante> findAllEstudiantesWithCursos(Pageable pageable);
+    
+    /**
+     * Busca estudiantes por nombre y carga sus cursos
+     */
+    @Query("SELECT DISTINCT e FROM Estudiante e " +
+           "LEFT JOIN FETCH e.cursos c " +
+           "WHERE LOWER(e.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) " +
+           "ORDER BY e.nombre ASC")
+    Page<Estudiante> searchEstudiantesWithCursos(@Param("nombre") String nombre, Pageable pageable);
 }

@@ -6,6 +6,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name="cursos")  
@@ -18,8 +24,12 @@ public class Curso{
     @Column(name="descripcion", length=255)
     private String descripcion;
 
-    public Curso(){}
+    @ManyToMany(mappedBy = "cursos", fetch = FetchType.LAZY)
+    private Set<Estudiante> estudiantes = new HashSet<>();
 
+    public Curso(){}
+    
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -44,7 +54,11 @@ public class Curso{
         this.descripcion = descripcion;
     }
 
-    
-    
+    public Set<Estudiante> getEstudiantes() {
+        return estudiantes;
+    }
 
+    public void setEstudiantes(Set<Estudiante> estudiantes) {
+        this.estudiantes = estudiantes;
+    }
 }
