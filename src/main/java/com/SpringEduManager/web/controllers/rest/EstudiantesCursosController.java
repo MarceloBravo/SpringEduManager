@@ -67,7 +67,7 @@ public class EstudiantesCursosController {
     @GetMapping("/api/estudiantes-cursos/{id}")
     public Map<String, Object> getById(@PathVariable("id") Long id){
         try{
-            return Map.of("data", estudianteCursoService.findById(id));
+            return Map.of("data", estudianteCursoService.findByEstudianteId(id));
         }catch(Exception e){
             return Map.of("error", e.getMessage());
         }

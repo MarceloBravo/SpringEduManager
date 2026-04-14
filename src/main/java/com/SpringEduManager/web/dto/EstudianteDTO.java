@@ -4,6 +4,8 @@ import com.SpringEduManager.common.validation.OnCreate;
 import com.SpringEduManager.common.validation.OnUpdate;
 import com.SpringEduManager.common.validation.ValidaEmail;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -27,6 +29,8 @@ public class EstudianteDTO {
     @Size(max = 150, groups = {OnCreate.class, OnUpdate.class}, message = "El email no puede exceder 150 caracteres")
     @ValidaEmail(groups = {OnCreate.class, OnUpdate.class})
     private String email;
+    
+    private List<CursoDTO> cursos;
     
     // Constructor vacío
     public EstudianteDTO() {}
@@ -70,5 +74,13 @@ public class EstudianteDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<CursoDTO> getCursos() {
+        return cursos;
+    }
+
+    public void setCursos(List<CursoDTO> cursos) {
+        this.cursos = cursos;
     }
 }

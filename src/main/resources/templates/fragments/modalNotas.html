@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  
+<div th:fragment="modalNotas" id="modalNotas" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-form-notas">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Evaluación</h5>
+      </div>
+      <div class="modal-body">
+        <p id="modal-message" class="row form-container">
+          <input type="hidden" id="cursoId" name="cursoId"/>
+          <span>Nota: </span>
+          <span><input type="number" id="nota" name="nota" min="0" max="7"/></span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-modal-notas-aceptar" class="btn btn-primary" onclick="grabarEvaluacion()">Grabar nota</button>
+        <button type="button" id="btn-modal-notas-cancelar" class="btn btn-secondary" data-dismiss="modal" onclick="hideModalNotas()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

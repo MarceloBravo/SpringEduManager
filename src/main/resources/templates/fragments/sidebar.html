@@ -41,17 +41,25 @@
             <span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>
             <span class="font-medium text-sm">Cursos</span>
         </a>
+        <!-- 
         <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'matriculas'} ? 'active-menu' : ''"
             href="#">
             <span class="material-symbols-outlined mr-3" data-icon="how_to_reg">how_to_reg</span>
             <span class="font-medium text-sm">Matriculas</span>
-        </a>
+        </a> 
+        -->
         <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'notas'} ? 'active-menu' : ''"
             href="#">
             <span class="material-symbols-outlined mr-3" data-icon="grade">grade</span>
             <span class="font-medium text-sm">Notas</span>
         </a>
+        <form action="/logout" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger">
+                <i class="material-symbols-outlined">logout</i>
+                Cerrar sesión
+            </button>
+        </form>
     </div>
 </aside>

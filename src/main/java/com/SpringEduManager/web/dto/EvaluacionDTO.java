@@ -31,6 +31,13 @@ public class EvaluacionDTO {
     public EvaluacionDTO() {
     }
 
+    public EvaluacionDTO(Long id, Double nota, Date fecha) {
+        this.id = id;
+        this.nota = nota;
+        this.fecha = fecha;
+        this.estudianteCurso = null;
+    }
+
     public EvaluacionDTO(Long id, Double nota, Date fecha, EstudianteCurso estudianteCurso) {
         this.id = id;
         this.nota = nota;

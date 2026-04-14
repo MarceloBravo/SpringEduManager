@@ -4,7 +4,6 @@ import java.sql.Date;
 
 import com.SpringEduManager.common.validation.OnCreate;
 import com.SpringEduManager.common.validation.OnUpdate;
-import com.SpringEduManager.web.entities.EstudianteCurso;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -18,20 +17,24 @@ public class EvaluacionRequestDTO {
     @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "La nota es obligatoria")
     Double nota;
     
-    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "La fecha es obligatoria")
+    //@NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "La fecha es obligatoria")
     Date fecha;
     
-    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "El estudiante curso es obligatorio")
-    EstudianteCurso estudianteCurso;
+    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "El estudiante es obligatorio")
+    Long estudianteId;
+
+    @NotNull(groups = {OnCreate.class, OnUpdate.class}, message = "El curso es obligatorio")
+    Long cursoId;
 
     public EvaluacionRequestDTO() {
     }
 
-    public EvaluacionRequestDTO(Long id, Double nota, Date fecha, EstudianteCurso estudianteCurso) {
+    public EvaluacionRequestDTO(Long id, Double nota, Date fecha, Long estudianteId, Long cursoId) {
         this.id = id;
         this.nota = nota;
         this.fecha = fecha;
-        this.estudianteCurso = estudianteCurso;
+        this.estudianteId = estudianteId;
+        this.cursoId = cursoId;
     }
 
     public Long getId() {
@@ -58,11 +61,19 @@ public class EvaluacionRequestDTO {
         this.fecha = fecha;
     }
 
-    public EstudianteCurso getEstudianteCurso() {
-        return this.estudianteCurso;
+    public Long getEstudianteId() {
+        return estudianteId;
     }
 
-    public void setEstudianteCurso(EstudianteCurso estudianteCurso) {
-        this.estudianteCurso = estudianteCurso;
+    public void setEstudianteId(Long estudianteId) {
+        this.estudianteId = estudianteId;
+    }
+
+    public Long getCursoId() {
+        return cursoId;
+    }
+
+    public void setCursoId(Long cursoId) {
+        this.cursoId = cursoId;
     }
 }

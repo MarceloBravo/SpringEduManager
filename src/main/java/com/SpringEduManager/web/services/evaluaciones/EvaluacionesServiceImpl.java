@@ -1,165 +1,151 @@
 package com.SpringEduManager.web.services.evaluaciones;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SpringEduManager.web.dto.EvaluacionDTO;
+import com.SpringEduManager.web.dto.CursoDTO;
+import com.SpringEduManager.web.dto.CursoNotasDTO;
+import com.SpringEduManager.web.dto.EstudianteDTO;
+import com.SpringEduManager.web.dto.EvaluacionRequestDTO;
+import com.SpringEduManager.web.dto.NotaConIdDTO;
+import com.SpringEduManager.web.entities.Curso;
+import com.SpringEduManager.web.entities.Estudiante;
 import com.SpringEduManager.web.entities.EstudianteCurso;
 import com.SpringEduManager.web.entities.Evaluacion;
-import com.SpringEduManager.web.repositories.EstudianteCursoRepository;
+import com.SpringEduManager.web.repositories.CursoRepository;
+import com.SpringEduManager.web.repositories.EstudianteRepository;
 import com.SpringEduManager.web.repositories.EvaluacionRepository;
+import com.SpringEduManager.web.repositories.EstudianteCursoRepository;
 
-/**
- * Implementación del servicio de evaluaciones académicas.
- * Proporciona la lógica de negocio para la gestión completa de evaluaciones
- * incluyendo validaciones, transformaciones de datos y operaciones CRUD.
- */
 @Service
-public class EvaluacionesServiceImpl implements EvaluacionesService  {
-
-    /**
-     * Repositorio para el acceso a datos de evaluaciones.
-     */
+public class EvaluacionesServiceImpl implements EvaluacionesService {
+    
     @Autowired
-    private EvaluacionRepository evalRepository;
+    private EvaluacionRepository evaluacionRepository;
 
-    /**
-     * Repositorio para el acceso a datos de relaciones estudiante-curso.
-     */
+    @Autowired
+    private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private CursoRepository cursoRepository;
+
     @Autowired
     private EstudianteCursoRepository estudianteCursoRepository;
 
-    /**
-     * {@inheritDoc}
-     * Obtiene todas las evaluaciones y las convierte a DTO para su presentación.
-     */
     @Override
-    public List<EvaluacionDTO> getAll() {
-        List<Evaluacion> evaluaciones = this.evalRepository.findAll();
-        return evaluaciones
-            .stream()
-            .map(eval -> new EvaluacionDTO(
-                eval.getId(),
-                eval.getNota(),
-                eval.getFecha(),
-                eval.getEstudianteCurso()
-            ))
-            .toList();
-    }
+    public List<CursoNotasDTO[]> getEstudianteNotas(Long estudianteId){
+        List<Object[]> resultados = evaluacionRepository.findEstudianteNotas(estudianteId);
+        List<CursoNotasDTO[]> cursosNotas = new ArrayList<>();
+        for (Object[] row : resultados) {
+            // Datos del estudiante y curso se encuentran en las primeras 7 columnas de cada fila (índices 0-6)
+            Long id = (Long) row[0];
+            Long estId = (Long) row[1];
+            String estNombre = (String) row[2];
+            String estApellido = (String) row[3];
+            String estEmail = (String) row[4];
+            Long cursoId = (Long) row[5];
+            String cursoNombre = (String) row[6];
+            String cursoDescripcion = (String) row[7];
 
-    /**
-     * {@inheritDoc}
-     * Busca evaluaciones por estudiante y las convierte a DTO.
-     */
-    @Override
-    public List<EvaluacionDTO> getByEstudianteId(Long estudianteId) {
-        List<Evaluacion> evaluaciones = this.evalRepository.findByEstudianteCurso_EstudianteId(estudianteId);
-        return evaluaciones
-            .stream()
-            .map(eval -> new EvaluacionDTO(
-                eval.getId(),
-                eval.getNota(),
-                eval.getFecha(),
-                eval.getEstudianteCurso()
-            ))
-            .toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     * Busca evaluaciones por curso y las convierte a DTO.
-     */
-    @Override
-    public List<EvaluacionDTO> getByCursoId(Long cursoId) {
-        List<Evaluacion> evaluaciones = this.evalRepository.findByEstudianteCurso_CursoId(cursoId);
-        return evaluaciones
-            .stream()
-            .map(eval -> new EvaluacionDTO(
-                eval.getId(),
-                eval.getNota(),
-                eval.getFecha(),
-                eval.getEstudianteCurso()
-            ))
-            .toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     * Busca una evaluación específica y la convierte a DTO.
-     * Lanza excepción si no se encuentra la evaluación.
-     */
-    @Override
-    public EvaluacionDTO getById(Long id) {
-        Evaluacion evaluacion = this.evalRepository.findById(id).orElse(null);
-        if (evaluacion == null) {
-            throw new RuntimeException("Evaluación no encontrada");
+            // Crear DTOs de estudiante y curso
+            EstudianteDTO estudiante = new EstudianteDTO(estId, estNombre, estApellido, estEmail);
+            CursoDTO curso = new CursoDTO(cursoId, cursoNombre, cursoDescripcion);
+            NotaConIdDTO[] notas = notas(row);            
+            // Crear CursoNotasDTO
+            CursoNotasDTO cursoNotasDTO = new CursoNotasDTO(
+                id,
+                estudiante, curso, 
+                notas[0], notas[1], notas[2], notas[3], notas[4], 
+                notas[5], notas[6], notas[7], notas[8], notas[9]
+            );
+            cursosNotas.add( new CursoNotasDTO[]{cursoNotasDTO});
         }
-        return new EvaluacionDTO(
-            evaluacion.getId(),
-            evaluacion.getNota(),
-            evaluacion.getFecha(),
-            evaluacion.getEstudianteCurso()
-        );
+        return cursosNotas;
     }
 
     /**
-     * {@inheritDoc}
-     * Valida los datos y guarda o actualiza una evaluación.
-     * Realiza validaciones de negocio antes de persistir los datos.
+     * Procesa las 10 evaluaciones de un estudiante
+     * @param row fila de la consulta
+     * @return array de 10 objetos NotaConIdDTO
      */
-    @Override
-    public Long save(Long id, Double nota, Date fecha, EstudianteCurso estudianteCurso) {
+    private NotaConIdDTO[] notas(Object[] row){
+        // Las evaluaciones se encuentran en las columnas 8-37 de cada fila (índices 8-37)
+        // Cada evaluación ocupa 3 columnas: ev_id, ev_nota, ev_fecha (id, nota, fecha)
+        NotaConIdDTO[] notas = new NotaConIdDTO[10];
+        for (int i = 0; i < 10; i++) {
+            Long evId = (Long) row[8 + i * 3];  // ev_id
+            if (evId != null) {
+                Double evNota = (Double) row[9 + i * 3];  // ev_nota
+                LocalDate localDate = (LocalDate) row[10 + i * 3];  // ev_fecha
+                Date evFecha;
+                evFecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                notas[i] = new NotaConIdDTO(evId, evNota, evFecha);
+            } else {
+                notas[i] = null;
+            }
+        }
+        return notas;
+    }
 
-        validaDatos(nota, fecha, estudianteCurso);
+    @Override
+    public Long save(EvaluacionRequestDTO request) {
+        Double nota = request.getNota();
+        java.sql.Date fecha = request.getFecha() != null ? request.getFecha() : new java.sql.Date(System.currentTimeMillis());
+        Estudiante estudiante = getEstudiante(request.getEstudianteId());
+        Curso curso = getCurso(request.getCursoId());
+        EstudianteCurso estCurso = getEstudianteCurso(estudiante, curso);
+        Evaluacion eval = new Evaluacion(nota, fecha, estCurso);
+
+        Long id = evaluacionRepository.save(eval).getId();
+        if(id == null){
+            throw new RuntimeException("Error al guardar la evaluación");
+        }
+        return id;
+    }
+
+    private Estudiante getEstudiante(Long id) {
+        Estudiante estudiante = estudianteRepository.findById(id).orElse(null);
+        if(estudiante == null){
+            throw new RuntimeException("Estudiante no encontrado");
+        }
+        return estudiante;
+    }
+
+    private Curso getCurso(Long id){
+        Curso curso = cursoRepository.findById(id).orElse(null);
+        if(curso == null){
+            throw new RuntimeException("Curso no encontrado");
+        }
+        return curso;
+    }
+
+    private EstudianteCurso getEstudianteCurso(Estudiante estudiante, Curso curso) {
+        List<EstudianteCurso> estudianteCursos = estudianteCursoRepository.findByEstudianteId(estudiante.getId());
+        EstudianteCurso estCurso = estudianteCursos.stream()
+            .filter(ec -> ec.getCurso().getId().equals(curso.getId()))
+            .findFirst()
+            .orElse(null);
         
-        Evaluacion eval = new Evaluacion(
-            id,
-            nota,
-            fecha,
-            estudianteCurso
-        );
-        return this.evalRepository.save(eval).getId();
+        if (estCurso == null) {
+            estCurso = new EstudianteCurso(null, estudiante, curso);
+            estCurso = estudianteCursoRepository.save(estCurso);
+        }
+
+        return estCurso;
     }
 
-    /**
-     * {@inheritDoc}
-     * Elimina una evaluación después de verificar su existencia.
-     */
     @Override
-    public void delete(Long id) {
-        Evaluacion evaluacion = this.evalRepository.findById(id).orElse(null);
-        if (evaluacion == null) {
+    public void deleteById(Long id) {
+        Evaluacion evaluacion = evaluacionRepository.findById(id).orElse(null);
+        if(evaluacion == null){
             throw new RuntimeException("Evaluación no encontrada");
         }
-        this.evalRepository.delete(evaluacion);
+        evaluacionRepository.deleteById(id);
     }
-
-    /**
-     * Valida los datos de una evaluación antes de guardarla.
-     * 
-     * @param nota Calificación a validar (debe estar entre 0 y 10)
-     * @param fecha Fecha a validar (no puede ser nula)
-     * @param estudianteCurso Relación estudiante-curso a validar (debe existir)
-     * @throws RuntimeException si algún dato es inválido
-     */
-    private void validaDatos(Double nota, Date fecha, EstudianteCurso estudianteCurso){        
-        if(nota == null || nota < 0 || nota > 10){
-            throw new RuntimeException("Nota inválida");
-        }
-        if(fecha == null){
-            throw new RuntimeException("Fecha inválida");
-        }
-        if(estudianteCurso == null){
-            throw new RuntimeException("EstudianteCurso inválido");
-        }
-        Long id = estudianteCurso.getId();
-        EstudianteCurso isExists = this.estudianteCursoRepository.findById(id).orElse(null);
-        if(isExists == null){
-            throw new RuntimeException("El curso del estudiante no fue encontrado");
-        }
-    }
-    
 }

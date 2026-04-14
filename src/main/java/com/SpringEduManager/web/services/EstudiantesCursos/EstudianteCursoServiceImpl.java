@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.SpringEduManager.web.dto.CursoDTO;
 import com.SpringEduManager.web.dto.EstudianteCursoDTO;
+import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.web.entities.Curso;
 import com.SpringEduManager.web.entities.Estudiante;
 import com.SpringEduManager.web.entities.EstudianteCurso;
@@ -62,17 +64,27 @@ public class EstudianteCursoServiceImpl implements EstudianteCursoService {
      * @return Lista de asignaciones del estudiante convertidas a DTO
      */
     @Override
-    public List<EstudianteCursoDTO> findByEstudianteId(Long estudianteId) {
-        List<EstudianteCurso> estudianteCursos = this.estudianteCursoRepository.findByEstudianteId(estudianteId);
-        return estudianteCursos
-        .stream()
-        .map(estudianteCurso -> new EstudianteCursoDTO(
-            estudianteCurso.getId(),
-            estudianteCurso.getEstudiante(),
-            estudianteCurso.getCurso()
-            )
-        )
-        .toList();
+    public EstudianteDTO findByEstudianteId(Long estudianteId) {
+        Estudiante estudianteCursos = this.estudianteRepository.findEstudianteWithCursos(estudianteId);
+        if(estudianteCursos == null) {
+            throw new RuntimeException("Estudiante no encontrado");
+        }
+        EstudianteDTO estudianteDTO = new EstudianteDTO();
+        estudianteDTO.setId(estudianteCursos.getId());
+        estudianteDTO.setNombre(estudianteCursos.getNombre());
+        estudianteDTO.setApellido(estudianteCursos.getApellido());
+        estudianteDTO.setEmail(estudianteCursos.getEmail());
+        
+        List<CursoDTO> cursosDTO = estudianteCursos.getCursos()
+            .stream()
+            .map(curso -> new CursoDTO(
+                    curso.getId(),
+                    curso.getNombre(),
+                    curso.getDescripcion()
+                ))
+            .toList();
+        estudianteDTO.setCursos(cursosDTO);
+        return estudianteDTO;
     }
 
     /**
@@ -122,7 +134,8 @@ public class EstudianteCursoServiceImpl implements EstudianteCursoService {
      */
     @Override
     public Long save(Long estudianteId, Long cursoId) {
-        
+        System.out.println("Estudiante ID: " + estudianteId);
+        System.out.println("Curso ID: " + cursoId);
         EstudianteCurso estudianteCurso = this.validaDatos(estudianteId, cursoId);
 
         return this.estudianteCursoRepository.save(estudianteCurso).getId();

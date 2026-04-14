@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.services.usuarios.UserService;
@@ -33,7 +34,21 @@ public class AuthController {
      * @return Nombre de la plantilla del formulario de login
      */
     @GetMapping("/login")
-    public String returnFromLogin(){
+    public String returnFromLogin(
+        @RequestParam(value = "logout", required = false) String logout, 
+        @RequestParam(value = "error", required = false) String error,
+        Model model
+    ) {
+        
+        if (logout != null) {
+            model.addAttribute("message", "Has cerrado sesión correctamente");
+            model.addAttribute("code", 200);
+        }
+        
+        if (error != null) {
+            model.addAttribute("message", "Credenciales incorrectas");
+            model.addAttribute("code", 400);
+        }
         return "login";
     }
 
@@ -68,6 +83,11 @@ public class AuthController {
             return "redirect:/register";
         }
         
+    }
+
+    @PostMapping("/logout")
+    public String logout(){
+        return "redirect:/login";
     }
     
 }

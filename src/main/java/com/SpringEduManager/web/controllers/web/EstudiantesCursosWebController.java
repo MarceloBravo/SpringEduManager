@@ -1,19 +1,22 @@
 package com.SpringEduManager.web.controllers.web;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.SpringEduManager.web.dto.EstudianteCursoDTO;
+import com.SpringEduManager.web.dto.EstudianteCursoRequestDTO;
 import com.SpringEduManager.web.services.EstudiantesCursos.EstudianteCursoService;
 
 import org.springframework.ui.Model;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Controlador web para la gestión de asignaciones de estudiantes a cursos.
@@ -30,74 +33,6 @@ public class EstudiantesCursosWebController {
     @Autowired
     private EstudianteCursoService estudianteCursoService;
 
-    /**
-     * Muestra el listado de asignaciones con filtros opcionales.
-     * GET /estudiantes-cursos/
-     * @param cursoId ID del curso para filtrar (opcional)
-     * @param estudianteId ID del estudiante para filtrar (opcional)
-     * @param model Modelo para pasar datos a la vista
-     * @return Nombre de la vista a renderizar
-     */
-    @GetMapping("/")
-    public String getAll(
-        @PathVariable(name = "curso", required = false) Long cursoId,
-        @PathVariable(name = "estudiante", required = false) Long estudianteId,
-        Model model
-    ){
-        try{
-            if(cursoId != null && estudianteId != null){
-                model.addAttribute("error", "No se puede especificar ambos parámetros");
-                return "redirect:/error";
-            }
-            if(cursoId != null){
-                List<EstudianteCursoDTO> estudianteCursos = estudianteCursoService.findByCursoId(cursoId);
-                model.addAttribute("data", Map.of("estudianteCursos", estudianteCursos));
-                return "estudiantes-cursos/index";
-            }
-            if(estudianteId != null){
-                List<EstudianteCursoDTO> estudianteCursos = estudianteCursoService.findByEstudianteId(estudianteId);
-                model.addAttribute("data", Map.of("estudianteCursos", estudianteCursos));
-                return "estudiantes-cursos/index";
-            }
-            List<EstudianteCursoDTO> estudianteCursos = estudianteCursoService.findAll();
-            model.addAttribute("data", Map.of("estudianteCursos", estudianteCursos));
-            return "estudiantes-cursos/index";
-        }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el listado de registros");
-            return "redirect:/error";
-        }
-    }
-
-    /**
-     * Muestra el detalle de una asignación específica.
-     * GET /estudiantes-cursos/{id}
-     * @param id ID de la asignación a mostrar
-     * @param model Modelo para pasar datos a la vista
-     * @return Nombre de la vista de detalle
-     */
-    @GetMapping("/{id}")
-    public String getById(@PathVariable(name = "id", required = true) Long id, Model model){
-        try{
-            EstudianteCursoDTO estudianteCurso = estudianteCursoService.findById(id);
-            model.addAttribute("data", estudianteCurso);
-            return "estudiantes-cursos/detail";
-        }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el registro");
-            return "redirect:/error";
-        }
-    }
-
-    /**
-     * Muestra el formulario para crear una nueva asignación.
-     * GET /estudiantes-cursos/nuevo
-     * @param model Modelo para pasar datos a la vista
-     * @return Nombre de la vista del formulario
-     */
-    @GetMapping("/nuevo")
-    public String nuevo(Model model){
-        model.addAttribute("data", new EstudianteCursoDTO());
-        return "estudiantes-cursos/nuevo";
-    }
 
     /**
      * Procesa el formulario de creación de nueva asignación.
@@ -107,13 +42,19 @@ public class EstudiantesCursosWebController {
      * @return Redirección al listado o página de error
      */
     @PostMapping("/grabar")
-    public String grabar(@ModelAttribute EstudianteCursoDTO estudianteCursoDTO, Model model){
+    @ResponseBody   
+    public Map<String, String> grabar(
+        @RequestBody EstudianteCursoRequestDTO request, 
+        Model model
+    ){
         try{
-            estudianteCursoService.save(estudianteCursoDTO.getEstudiante().getId(), estudianteCursoDTO.getCurso().getId());
-            return "redirect:/estudiantes-cursos";
+            Long id = estudianteCursoService.save(request.estudianteId(), request.cursoId());
+            if(id == null){
+                throw new RuntimeException("No se pudo asignar el estudiante al curso");
+            }
+            return Map.of("message","El estudiante ha sido asignado al curso exitosamente");
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al grabar el registro");
-            return "redirect:/error";
+            return Map.of("error","Ocurrió un error al grabar el registro");
         }
     }
 
@@ -163,13 +104,13 @@ public class EstudiantesCursosWebController {
      * @return Redirección al listado o página de error
      */
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable(name = "id", required = true) Long id, Model model){
+    @ResponseBody
+    public Map<String, String> eliminar(@PathVariable(name = "id", required = true) Long id, Model model){
         try{
             estudianteCursoService.delete(id);
-            return "redirect:/estudiantes-cursos";
+            return Map.of("message", "Asignación eliminada exitosamente");
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al eliminar el registro");
-            return "redirect:/error";
+            return Map.of("error", "Ocurrió un error al eliminar el registro");
         }
     }
 

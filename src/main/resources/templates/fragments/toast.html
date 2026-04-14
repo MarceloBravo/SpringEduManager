@@ -3,6 +3,7 @@
 
 <body>
 
+    <!-- Toast generado por Thymeleaf -->
     <div th:fragment="toast" class="toast-container position-absolute top-0 end-0 p-3">
 
         <div 
@@ -27,18 +28,17 @@
                 Mensaje del toast
             </div>
         </div>
+
+        <!-- Toast generado por JavaScript -->
+        <div class="toast bg-primary toast-js" id="toast-js" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toast-js-title">Bootstrap</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-js-body">
+                Atención, los toasts se apilarán automáticamente
+            </div>
+        </div>
     </div>
 
-    <div class="toast bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <img src="..." class="rounded me-2" alt="...">
-            <strong class="me-auto">Bootstrap</strong>
-            <small class="text-muted">2 seconds ago</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            Atención, los toasts se apilarán automáticamente
-        </div>
-    </div>
-
-    </div>
+    

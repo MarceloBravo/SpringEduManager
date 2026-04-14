@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  
+<div th:fragment="modalCursos" id="modalCursos" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" id="modal-dialog-cursos" role="document">
+    <div class="modal-content modal-curso">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Inscribir cursos</h5>
+      </div>
+      <div class="modal-body">
+        <p id="modal-message">Busca y selecciona el curso al que deseas inscribir al estudiante.</p>
+        
+        <!-- Formulario de búsqueda -->
+        <div class="search-container">
+          <input type="text" id="busquedaCurso" class="form-control" placeholder="Buscar curso...">
+          <button type="button" class="btn btn-primary" onclick="buscarCursos(document.getElementById('busquedaCurso').value)">Buscar</button>
+        </div>
+        
+        <!-- Lista de cursos -->
+        <div class="cursos-list">
+          <ul id="listaCursos">
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-modal-cancelar" class="btn btn-secondary" data-dismiss="modal" onclick="hideModalCursos()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

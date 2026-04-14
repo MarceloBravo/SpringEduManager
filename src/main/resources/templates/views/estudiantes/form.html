@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="/css/global.css" />
     <link rel="stylesheet" href="/css/sidebar.css" />
     <link rel="stylesheet" href="/css/modal.css" type="text/css" />
+    <link rel="stylesheet" href="/css/toast.css" type="text/css" />
 
     <script src="/js/toast.js"></script>
     <script src="/js/modal.js"></script>
@@ -93,7 +94,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-10">
+                    <div class="col-6 text-left">
 
                         <button 
                             type="button" 
@@ -109,6 +110,14 @@
                         >Eliminar</button>
                         
                         <a type="button" class="btn btn-primary" th:href="@{/estudiantes/list}">Cancelar</a>
+                    </div>
+                    <div class="col-6 text-right">
+                        <a type="button" 
+                            th:if="${estudiante.id != null}"
+                            class="btn btn-primary" 
+                            th:href="@{/cursos-evaluaciones/alumno/{id}(id=${estudiante.id})}">
+                            Cursos y Evaluaciones
+                        </a>
                     </div>
                 </div>
             </form>

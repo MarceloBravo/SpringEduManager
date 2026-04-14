@@ -11,3 +11,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10000);
     }
 });
+
+const showToastJs = (title, message, type = 'info') => {
+    const toastElement = document.getElementById('toast-js');
+    const toastTitle = document.getElementById('toast-js-title');
+    const toastBody = document.getElementById('toast-js-body');
+    
+    // Limpiar clases previas
+    toastElement.classList.remove('toast-info', 'toast-success', 'toast-warning', 'toast-danger');
+    
+    toastTitle.textContent = title;
+    toastBody.textContent = message;
+    
+    toastElement.classList.add('show');
+
+    switch(type) {
+        case 'info':
+            toastElement.classList.add('toast-info');
+            break;
+        case 'success':
+            toastElement.classList.add('toast-success');
+            break;
+        case 'warning':
+            toastElement.classList.add('toast-warning');
+            break;
+        case 'danger':
+            toastElement.classList.add('toast-danger');
+            break;
+        default:
+            toastElement.classList.add('toast-info');
+            break;
+    }
+    
+    setTimeout(() => {
+        toastElement.classList.remove('show');
+    }, 10000);
+};

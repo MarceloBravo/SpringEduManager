@@ -3,6 +3,7 @@ package com.SpringEduManager.web.services.EstudiantesCursos;
 import java.util.List;
 
 import com.SpringEduManager.web.dto.EstudianteCursoDTO;
+import com.SpringEduManager.web.dto.EstudianteDTO;
 
 /**
  * Interfaz de servicio para la gestión de asignaciones estudiante-curso.
@@ -22,7 +23,7 @@ public interface EstudianteCursoService {
      * @param estudianteId ID del estudiante a buscar
      * @return Lista de asignaciones del estudiante
      */
-    List<EstudianteCursoDTO> findByEstudianteId(Long estudianteId);
+    EstudianteDTO findByEstudianteId(Long estudianteId);
 
     /**
      * Busca todas las asignaciones de un curso específico.

@@ -1,10 +1,10 @@
 const hideModal = () => {
-    const modal = document.getElementsByClassName("modal")[0];
+    const modal = document.getElementById("modal-query");
     modal.style.display = "none";
 }
 
 const showModal = (formId, id = null, title = "Información", message = "", btnAceptarText = "Aceptar", btnCancelarText = "Cancelar") => {
-    const modal = document.getElementsByClassName("modal")[0];
+    const modal = document.getElementById("modal-query");
     modal.style.display = "block";
     document.getElementById("modal-title").innerHTML =title;
     document.getElementById("modal-message").innerHTML = message;
@@ -13,7 +13,7 @@ const showModal = (formId, id = null, title = "Información", message = "", btnA
     
     
     const btnAceptar = document.getElementById("btn-modal-aceptar");
-    btnAceptar.addEventListener("click", (e) => {
+    btnAceptar.addEventListener("click", () => {
         hideModal();
         if(id){
             document.getElementById("delete-id").value = id;

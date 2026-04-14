@@ -30,6 +30,13 @@ public class Evaluacion {
 
     public Evaluacion(){}
 
+    public Evaluacion(Double nota, Date fecha, EstudianteCurso estudianteCurso) {
+        this.id = null;
+        this.nota = nota;
+        this.fecha = fecha;
+        this.estudianteCurso = estudianteCurso;
+    }
+    
     public Evaluacion(Long id, Double nota, Date fecha, EstudianteCurso estudianteCurso) {
         this.id = id;
         this.nota = nota;
