@@ -29,6 +29,8 @@ public class EstudianteDTO {
     @Size(max = 150, groups = {OnCreate.class, OnUpdate.class}, message = "El email no puede exceder 150 caracteres")
     @ValidaEmail(groups = {OnCreate.class, OnUpdate.class})
     private String email;
+
+    private String password;
     
     private List<CursoDTO> cursos;
     
@@ -36,11 +38,12 @@ public class EstudianteDTO {
     public EstudianteDTO() {}
     
     // Constructor completo
-    public EstudianteDTO(Long id, String nombre, String apellido, String email) {
+    public EstudianteDTO(Long id, String nombre, String apellido, String email, String password) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
+        this.password = password;
     }
 
     // Getters y Setters
@@ -74,6 +77,14 @@ public class EstudianteDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<CursoDTO> getCursos() {

@@ -54,7 +54,7 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
             String cursoDescripcion = (String) row[7];
 
             // Crear DTOs de estudiante y curso
-            EstudianteDTO estudiante = new EstudianteDTO(estId, estNombre, estApellido, estEmail);
+            EstudianteDTO estudiante = new EstudianteDTO(estId, estNombre, estApellido, estEmail, null);
             CursoDTO curso = new CursoDTO(cursoId, cursoNombre, cursoDescripcion);
             NotaConIdDTO[] notas = notas(row);            
             // Crear CursoNotasDTO

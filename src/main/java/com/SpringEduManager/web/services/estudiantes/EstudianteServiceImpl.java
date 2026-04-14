@@ -7,8 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.SpringEduManager.web.dto.EstudianteDTO;
+import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.entities.Estudiante;
+import com.SpringEduManager.web.entities.Usuario;
+import com.SpringEduManager.web.enums.RolesEnum;
 import com.SpringEduManager.web.repositories.EstudianteRepository;
+import com.SpringEduManager.web.services.usuarios.UserService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +24,9 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Autowired
     private EstudianteRepository repository;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Obtiene todos los estudiantes de la base de datos.
@@ -33,7 +41,8 @@ public class EstudianteServiceImpl implements EstudianteService {
                     estudiante.getId(), 
                     estudiante.getNombre(), 
                     estudiante.getApellido(), 
-                    estudiante.getEmail()
+                    estudiante.getEmail(),
+                    null
                 ))
                 .toList();
     }
@@ -54,7 +63,8 @@ public class EstudianteServiceImpl implements EstudianteService {
             estudiante.getId(),
             estudiante.getNombre(),
             estudiante.getApellido(),
-            estudiante.getEmail()
+            estudiante.getEmail(),
+            null
         ));
     }
 
@@ -72,7 +82,8 @@ public class EstudianteServiceImpl implements EstudianteService {
                     estudiante.getId(), 
                     estudiante.getNombre(), 
                     estudiante.getApellido(), 
-                    estudiante.getEmail()
+                    estudiante.getEmail(),
+                    null
                 ))
                 .toList();
     }
@@ -92,7 +103,8 @@ public class EstudianteServiceImpl implements EstudianteService {
             estudiante.getId(), 
             estudiante.getNombre(), 
             estudiante.getApellido(), 
-            estudiante.getEmail()
+            estudiante.getEmail(),
+            null
         );
     }
 
@@ -111,7 +123,8 @@ public class EstudianteServiceImpl implements EstudianteService {
             estudiante.getId(), 
             estudiante.getNombre(), 
             estudiante.getApellido(), 
-            estudiante.getEmail()
+            estudiante.getEmail(),
+            null
         );
     }
 
@@ -133,7 +146,15 @@ public class EstudianteServiceImpl implements EstudianteService {
         estudiante.setNombre(_estudiante.getNombre());
         estudiante.setApellido(_estudiante.getApellido());
         estudiante.setEmail(_estudiante.getEmail());
-        return this.repository.save(estudiante).getId();
+        Long id = this.repository.save(estudiante).getId();
+
+        if(id != null){
+            crearUsuario(_estudiante);
+        }else{
+            String accion = estudiante.getId() != null ? "actualizar" : "registrar";
+            throw new RuntimeException("Error al " + accion + " el estudiante.");
+        }
+        return id;
     }
 
     /**
@@ -157,6 +178,10 @@ public class EstudianteServiceImpl implements EstudianteService {
      * @throws RuntimeException si hay campos obligatorios vacíos
      */
     private void validaDatosObligatorios(EstudianteDTO estudiante){
+        if(estudiante.getId() == null && (estudiante.getPassword() == null || estudiante.getPassword().trim().isEmpty())){
+            throw new RuntimeException("La contraseña es obligatoria.");
+        }
+
         boolean isOk = true;
         if(estudiante.getNombre() == null || estudiante.getNombre().trim().isEmpty()){
             isOk = false;
@@ -181,6 +206,23 @@ public class EstudianteServiceImpl implements EstudianteService {
         Estudiante isEmailExists = this.repository.findByEmail(_estudiante.getEmail()).orElse(null);
         if(isEmailExists != null && !Objects.equals(isEmailExists.getId(), _estudiante.getId())){
             throw new RuntimeException("El email ya está registrado.");
+        }
+    }
+
+    private void crearUsuario(EstudianteDTO estudiante){
+        UserDTO userExists = this.userService.findByEmail(estudiante.getEmail());
+        if(userExists != null){
+            return;
+        }
+        UserDTO user = new UserDTO();
+        user.setNombre(estudiante.getNombre());
+        user.setApellido(estudiante.getApellido());
+        user.setEmail(estudiante.getEmail());
+        user.setRole(RolesEnum.STUDENT);
+        user.setPassword(estudiante.getPassword());
+        Long userId = this.userService.save(user);
+        if(userId == null){
+            throw new RuntimeException("Error al crear el usuario para el estudiante.");
         }
     }
 }
