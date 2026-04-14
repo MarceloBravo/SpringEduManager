@@ -100,13 +100,19 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
         Estudiante estudiante = getEstudiante(request.getEstudianteId());
         Curso curso = getCurso(request.getCursoId());
         EstudianteCurso estCurso = getEstudianteCurso(estudiante, curso);
-        Evaluacion eval = new Evaluacion(nota, fecha, estCurso);
+        Long id = request.getId();
+        Evaluacion eval;
+        if(id != null){
+            eval = new Evaluacion(id, nota, fecha, estCurso);
+        }else{
+            eval = new Evaluacion(nota, fecha, estCurso);
+        }
 
-        Long id = evaluacionRepository.save(eval).getId();
-        if(id == null){
+        Long savedId = evaluacionRepository.save(eval).getId();
+        if(savedId == null){
             throw new RuntimeException("Error al guardar la evaluación");
         }
-        return id;
+        return savedId;
     }
 
     private Estudiante getEstudiante(Long id) {

@@ -33,6 +33,7 @@
 
     <script src="/js/modal.js"></script>
     <script src="/js/evaluaciones-list.js"></script>
+    <script src="/js/evaluaciones-list-module.js" type="module"></script>
     <script src="/js/toast.js"></script>
     <script src="/js/tailwind.js"></script>
 </head>
@@ -64,7 +65,7 @@
                     <table class="min-w-full table-auto">
                         <thead>
                             <tr class="border-b">
-                                <th class="px-4 py-2 text-center">Eliminar</th>
+                                <th class="px-4 py-2 text-center delete-column" id="deleteColumn">Eliminar</th>
                                 <th class="px-4 py-2 text-center">Curso</th>
                                 <th class="px-4 py-2 text-left">Agregar Evaluación</th>
                                 <th class="px-4 py-2 text-left">Nota 1</th>
@@ -83,12 +84,25 @@
                         <tbody>
                             <tr th:each="row : ${data}" 
                                 th:if="${row[0].id != null}" 
-                                class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-2 col-actions">
+                                class="border-b hover:bg-gray-50"
+                                th:data-id="${row[0].curso.id}"
+                                >
+                                <td class="px-4 py-2 col-actions delete-column">
+
+                                    <script th:inline="javascript">
+                                        // Contar cursos sin notas para determinar si se muestra la columna eliminar
+                                        // El código encargado de mostrar la columna eliminar se encuentra en el archivo evaluaciones-list-module.js
+                                        var nota = /*[[${row[0].nota1 == null ? null : row[0].nota1}]]*/ null;
+                                        if(nota == null) {
+                                            cursosSinNotas++;
+                                            console.log("Curso sin notas:", cursosSinNotas);
+                                        }
+                                    </script>
+
                                     <span 
-                                        th:if="${row[0].nota1 == null}"
                                         class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded ml-2"
                                         th:onclick="'deleteCurso(' + ${row[0].id} + ');'"
+                                        th:if="${row[0].nota1 == null}"
                                     >
                                         <i class="material-symbols-outlined">delete</i>
                                     </span>
@@ -99,16 +113,16 @@
                                         <i class="material-symbols-outlined">add</i>
                                     </span>
                                 </td>
-                                <td class="px-4 py-2" th:text="${row[0].nota1 != null ? row[0].nota1.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota1 != null ? row[0].nota1.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota2 != null ? row[0].nota2.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota2 != null ? row[0].nota2.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota3 != null ? row[0].nota3.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota3 != null ? row[0].nota3.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota4 != null ? row[0].nota4.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota4 != null ? row[0].nota4.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota5 != null ? row[0].nota5.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota5 != null ? row[0].nota5.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota6 != null ? row[0].nota6.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota6 != null ? row[0].nota6.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota7 != null ? row[0].nota7.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota7 != null ? row[0].nota7.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota8 != null ? row[0].nota8.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota8 != null ? row[0].nota8.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota9 != null ? row[0].nota9.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota9 != null ? row[0].nota9.id : null} + ')'"></td>
-                                <td class="px-4 py-2" th:text="${row[0].nota10 != null ? row[0].nota10.nota : ''}" th:onclick="'eliminarEvaluacion(' + ${row[0].nota10 != null ? row[0].nota10.id : null} + ')'"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota1 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota1 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota1 != null ? row[0].nota1.nota : ''}" th:data-id="${row[0].nota1 != null ? row[0].nota1.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota2 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota2 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota2 != null ? row[0].nota2.nota : ''}" th:data-id="${row[0].nota2 != null ? row[0].nota2.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota3 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota3 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota3 != null ? row[0].nota3.nota : ''}" th:data-id="${row[0].nota3 != null ? row[0].nota3.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota4 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota4 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota4 != null ? row[0].nota4.nota : ''}" th:data-id="${row[0].nota4 != null ? row[0].nota4.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota5 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota5 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota5 != null ? row[0].nota5.nota : ''}" th:data-id="${row[0].nota5 != null ? row[0].nota5.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota6 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota6 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota6 != null ? row[0].nota6.nota : ''}" th:data-id="${row[0].nota6 != null ? row[0].nota6.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota7 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota7 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota7 != null ? row[0].nota7.nota : ''}" th:data-id="${row[0].nota7 != null ? row[0].nota7.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota8 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota8 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota8 != null ? row[0].nota8.nota : ''}" th:data-id="${row[0].nota8 != null ? row[0].nota8.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota9 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota9 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota9 != null ? row[0].nota9.nota : ''}" th:data-id="${row[0].nota9 != null ? row[0].nota9.id : null}"></td>
+                                <td class="px-4 py-2" th:style="${row[0].nota10 != null ? 'cursor: pointer;' : ''}" th:title="${row[0].nota10 != null ? 'Eliminar' : ''}"  th:text="${row[0].nota10 != null ? row[0].nota10.nota : ''}" th:data-id="${row[0].nota10 != null ? row[0].nota10.id : null}"></td>
                                 <!-- <td class="px-4 py-2" th:text="${row[0].promedio}"></td> -->
                             </tr>
                         </tbody>
@@ -118,6 +132,14 @@
             </div>
         </div>
     </main>
+
+    <div id="popup-menu" class="popup-menu">
+        <input type="hidden" id="nota-id" value=""/>
+        <ul>
+            <li onclick="editarEvaluacion()">Editar</li>
+            <li onclick="eliminarEvaluacion()">Eliminar</li>
+        </ul>
+    </div>
 
     <form 
         method="post" 

@@ -1,4 +1,5 @@
 
+
 // ************* Funciones para manejo de Cursos ****************** // 
 const showModalCursos = () => {
     const modal = document.getElementById("modalCursos");
@@ -41,7 +42,7 @@ const inscribirCurso = async (id) => {
     }
 };
 
-const buscarCursos = async (texto) => {
+const buscarCursos = async (texto) => {    
     try {
         const response = await fetch(`/cursos/js-search?filtro=${texto}`, {
             method: 'GET'
@@ -64,20 +65,24 @@ const seleccionarCurso = (id, nombre) => {
     inscribirCurso(id);
 }
 
-const deleteCurso = async (id) => {
+const deleteCurso = (id) => {
+    showModal(null, id, "Eliminar Curso", "¿Está seguro de eliminar este curso?", "Eliminar", "Cancelar", handleEliminarCurso);
+}
+
+const handleEliminarCurso = async (id) => {
     try{
         const response = await fetch(`/estudiantes-cursos/eliminar/${id}`, {
             method: 'POST'
         });
         const result = await response.json();
-        
+
         if (result.error) {
             showToastJs('Error', result.error, 'danger');
         } else {
             showToastJs('Info', 'Curso eliminado exitosamente', 'success');
             setTimeout(() => {
                 window.location.reload();
-            }, 5000);
+            }, 3000);
         }
     } catch (error) {
         showToastJs('Error', 'Error al eliminar curso', 'danger');
@@ -88,10 +93,30 @@ const deleteCurso = async (id) => {
 
 
 // **************** Funciones para manejo de Notas ****************** //
-const showModalNotas = (cursoId) => {
+const showPopupMenu = (celda, x, y) => {
+    const popup = document.getElementById("popup-menu");
+    if(celda == null || celda == undefined){
+        popup.style.display = "none";
+        return;
+    }
+    popup.style.display = "block";
+    popup.style.left = x + (celda.offsetWidth / 2) + "px";
+    popup.style.top = y + (celda.offsetHeight / 2) + "px";
+    celda.classList.add("active-td");
+    document.getElementById("nota-id").value = celda.dataset.id;
+    document.getElementById("nota-id").dataset.nota = celda.innerHTML;
+    document.getElementById("nota-id").dataset.cursoId = celda.parentNode.dataset.id;
+}
+
+const hidePopupMenu = () => {
+    const popup = document.getElementById("popup-menu");
+    popup.style.display = "none";
+}
+
+const showModalNotas = (cursoId, nota = "") => {
     const modal = document.getElementById("modalNotas");
     modal.style.display = "block";
-    document.getElementById("nota").value = "";
+    document.getElementById("nota").value = nota;
     document.getElementById("cursoId").value = cursoId;
 }
 
@@ -103,6 +128,7 @@ const hideModalNotas = () => {
 const grabarEvaluacion = async () => {
     const cursoId = document.getElementById("cursoId").value;
     const alumnoId = document.getElementById("estudianteId").value;
+    const notaId = document.getElementById("nota-id").value;
     const nota = document.getElementById("nota").value;
     
     try {
@@ -112,9 +138,10 @@ const grabarEvaluacion = async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                id: notaId ?? null,
                 estudianteId: alumnoId,
                 cursoId: cursoId,
-                nota
+                nota: parseFloat(nota)
             })
         });
         const result = await resp.json();
@@ -126,7 +153,7 @@ const grabarEvaluacion = async () => {
             showToastJs('Info', 'Evaluación grabada exitosamente', 'success');
             setTimeout(() => {
                 window.location.reload();
-            }, 5000);
+            }, 3000);
         }
     } catch (error) {
         console.error('Error al grabar evaluación:', error);
@@ -134,11 +161,21 @@ const grabarEvaluacion = async () => {
     }
 };
 
+const editarEvaluacion = () => {
+    const cursoId = document.getElementById("nota-id").dataset.cursoId;
+    document.getElementById("cursoId").value = cursoId;
+    const notaValue = document.getElementById("nota-id").dataset.nota;
+    showModalNotas(cursoId, notaValue);
+}
 
-const eliminarEvaluacion = async (id) => {
-    if(id === null || id === undefined){
-        return;
-    }
+
+
+const eliminarEvaluacion = async () => {
+    const id = document.getElementById("nota-id").value;
+    showModal(null, id, "Eliminar Evaluación", "¿Está seguro de eliminar esta evaluación?", "Eliminar", "Cancelar", handleEliminarEvaluacion);
+}
+
+const handleEliminarEvaluacion = async (id) => {
     try{
         const response = await fetch(`/cursos-evaluaciones/eliminar/${id}`, {
             method: 'POST'
@@ -151,10 +188,16 @@ const eliminarEvaluacion = async (id) => {
             showToastJs('Info', 'Evaluación eliminada exitosamente', 'success');
             setTimeout(() => {
                 window.location.reload();
-            }, 5000);
+            }, 3000);
         }
     } catch (error) {
         showToastJs('Error', 'Error al eliminar evaluación', 'danger');
         console.error('Error al eliminar evaluación:', error);
     }
 }
+
+
+// variable global para contar cursos sin notas, 
+// Permite mostrar la columna de eliminación solo si hay cursos sin notas
+// El código encargado de mostrar u ocultar la columna está en evaluaciones-list-module.js
+var cursosSinNotas = 0;

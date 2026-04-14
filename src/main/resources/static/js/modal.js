@@ -3,7 +3,7 @@ const hideModal = () => {
     modal.style.display = "none";
 }
 
-const showModal = (formId, id = null, title = "Información", message = "", btnAceptarText = "Aceptar", btnCancelarText = "Cancelar") => {
+const showModal = (formId, id = null, title = "Información", message = "", btnAceptarText = "Aceptar", btnCancelarText = "Cancelar", funcion = null) => {
     const modal = document.getElementById("modal-query");
     modal.style.display = "block";
     document.getElementById("modal-title").innerHTML =title;
@@ -15,10 +15,14 @@ const showModal = (formId, id = null, title = "Información", message = "", btnA
     const btnAceptar = document.getElementById("btn-modal-aceptar");
     btnAceptar.addEventListener("click", () => {
         hideModal();
-        if(id){
-            document.getElementById("delete-id").value = id;
-        }
-        document.getElementById(formId).submit();
+        if(funcion){
+            funcion(id);
+        }else{
+            if(id){
+                document.getElementById("delete-id").value = id;
+            }
+            document.getElementById(formId).submit();
+        }   
     });
 
     const btnCancelar = document.getElementById("btn-modal-cancelar");
