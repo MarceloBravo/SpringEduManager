@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Spring EduManagement</title>
+    <!-- Tailwind CSS with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Manrope & Inter -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="/css/estudiantes-list.css" type="text/css" />
+    <link rel="stylesheet" href="/css/evaluaciones-list.css" type="text/css" />
+    <link rel="stylesheet" href="/css/sidebar.css" type="text/css" />
+    <link rel="stylesheet" href="/css/toast.css" type="text/css" />
+
+    <script src="/js/evaluaciones-list.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/tailwind.js"></script>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen">
+    <!-- Barra de Menú lateral -->
+    <div th:replace="~{../fragments/toast :: toast}"></div>
+    <div th:replace="~{../fragments/sidebar :: sidebar}"></div>
+    
+    <!-- Contenido Principal -->
+    <main class="ml-64 p-8">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold mb-6">Cursos y Evaluaciones</h1>
+            <input type="hidden" id="estudianteId" th:value="${data[0][0].estudiante.id}">
+            <div class="mb-6 top-tool-bar">
+                <div class="col-6 text-left">
+                    Alumno: <span th:text="${data[0][0].estudiante.nombre} + ' ' + ${data[0][0].estudiante.apellido}"></span>
+                </div>
+            </div>
+            <!-- Tabla de Estudiantes -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="px-4 py-2 text-center">Curso</th>
+                                <th class="px-4 py-2 text-left">Nota 1</th>
+                                <th class="px-4 py-2 text-left">Nota 2</th>
+                                <th class="px-4 py-2 text-left">Nota 3</th>
+                                <th class="px-4 py-2 text-left">Nota 4</th>
+                                <th class="px-4 py-2 text-left">Nota 5</th>
+                                <th class="px-4 py-2 text-left">Nota 6</th>
+                                <th class="px-4 py-2 text-left">Nota 7</th>
+                                <th class="px-4 py-2 text-left">Nota 8</th>
+                                <th class="px-4 py-2 text-left">Nota 9</th>
+                                <th class="px-4 py-2 text-left">Nota 10</th>
+                                <!-- <th class="px-4 py-2 text-left">Promedio</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="row : ${data}" 
+                                th:if="${row[0].id != null}" 
+                                class="border-b hover:bg-gray-50"
+                                th:data-id="${row[0].curso.id}"
+                            >                                
+                                <td class="px-4 py-2" th:text="${row[0].curso.nombre}"></td>
+                                
+                                <td class="px-4 py-2" th:text="${row[0].nota1 != null ? row[0].nota1.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota2 != null ? row[0].nota2.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota3 != null ? row[0].nota3.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota4 != null ? row[0].nota4.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota5 != null ? row[0].nota5.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota6 != null ? row[0].nota6.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota7 != null ? row[0].nota7.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota8 != null ? row[0].nota8.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota9 != null ? row[0].nota9.nota : ''}"></td>
+                                <td class="px-4 py-2" th:text="${row[0].nota10 != null ? row[0].nota10.nota : ''}"></td>
+                                <!-- <td class="px-4 py-2" th:text="${row[0].promedio}"></td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

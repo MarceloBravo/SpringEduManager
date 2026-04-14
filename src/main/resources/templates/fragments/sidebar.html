@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <body>
 
 <aside th:fragment="sidebar"
@@ -10,8 +11,8 @@
                 <span class="material-symbols-outlined" data-icon="school">school</span>
             </div>
             <div>
-                <h1 class="font-headline font-bold text-[#1B4965] leading-none"><title>Spring EduManagement</title></h1>
-                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mt-1">Portal de administración
+                <h1 class="font-headline font-bold text-[#1B4965] leading-none" th:text="${#authentication?.name} ?: 'Spring EduManagement'"></h1>
+                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mt-1">Web de gestión académica
                 </p>
             </div>
         </div>
@@ -23,38 +24,40 @@
             <span class="material-symbols-outlined mr-3" data-icon="home">home</span>
             <span class="font-medium text-sm">home</span>
         </a>
-        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+        <!-- Solo visible para ADMIN -->
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
+            class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'usuarios'} ? 'active-menu' : ''"
             th:href="@{/users/list}">
             <span class="material-symbols-outlined mr-3" data-icon="group">group</span>
             <span class="font-medium text-sm">Usuarios</span>
         </a>        
-        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
-            th:classappend="${menu == 'estudiantes'} ? 'active-menu' : ''"
-            th:href="@{/estudiantes/list}">
-            <span class="material-symbols-outlined mr-3" data-icon="school">school</span>
-            <span class="font-medium text-sm">Estudiantes</span>
-        </a>
-        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+            class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'cursos'} ? 'active-menu' : ''"
             th:href="@{/cursos/list}">
             <span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>
             <span class="font-medium text-sm">Cursos</span>
         </a>
-        <!-- 
-        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
-            th:classappend="${menu == 'matriculas'} ? 'active-menu' : ''"
-            href="#">
-            <span class="material-symbols-outlined mr-3" data-icon="how_to_reg">how_to_reg</span>
-            <span class="font-medium text-sm">Matriculas</span>
-        </a> 
-        -->
-        <a class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
+            class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'estudiantes'} ? 'active-menu' : ''"
+            th:href="@{/estudiantes/list}">
+            <span class="material-symbols-outlined mr-3" data-icon="school">school</span>
+            <span class="font-medium text-sm">Estudiantes</span>
+        </a>
+        
+        <a th:if="${#authorization.expression('hasRole(''STUDENT'')')}" 
+            class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'notas'} ? 'active-menu' : ''"
-            href="#">
+            th:href="@{/cursos-evaluaciones/notas-alumno}"
+        >
             <span class="material-symbols-outlined mr-3" data-icon="grade">grade</span>
             <span class="font-medium text-sm">Notas</span>
         </a>
+
         <form action="/logout" method="post" class="d-inline">
             <button type="submit" class="btn btn-outline-danger">
                 <i class="material-symbols-outlined">logout</i>

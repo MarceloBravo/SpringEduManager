@@ -56,6 +56,12 @@
                     Alumno: <span th:text="${data[0][0].estudiante.nombre} + ' ' + ${data[0][0].estudiante.apellido}"></span>
                 </div>
                 <div class="col-6 text-right">
+                    <a href="javascript:history.back()">
+                        <span class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded ml-2">
+                            <i class="material-symbols-outlined">arrow_back</i>
+                        </span>
+                        Volver
+                    </a>
                     <button type="button" class="btn btn-primary mb-2" onclick="showModalCursos()">Inscribir curso</button>
                 </div>
             </div>

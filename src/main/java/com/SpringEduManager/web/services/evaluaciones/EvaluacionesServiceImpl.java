@@ -39,6 +39,15 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
     private EstudianteCursoRepository estudianteCursoRepository;
 
     @Override
+    public List<CursoNotasDTO[]> getEstudianteNotasByUserEmail(String userEmail){
+        Estudiante estudiante = estudianteRepository.findByEmail(userEmail).orElse(null);
+        if(estudiante == null){
+            throw new RuntimeException("Estudiante no encontrado");
+        }
+        return getEstudianteNotas(estudiante.getId());
+    }
+
+    @Override
     public List<CursoNotasDTO[]> getEstudianteNotas(Long estudianteId){
         List<Object[]> resultados = evaluacionRepository.findEstudianteNotas(estudianteId);
         List<CursoNotasDTO[]> cursosNotas = new ArrayList<>();

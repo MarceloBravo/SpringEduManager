@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.SpringEduManager.web.dto.CursoNotasDTO;
 import com.SpringEduManager.web.dto.EvaluacionRequestDTO;
@@ -34,10 +37,28 @@ public class EvaluacionesWebController {
             List<CursoNotasDTO[]> cursoNotas = evaluacionesService.getEstudianteNotas(id);
             model.addAttribute("data", cursoNotas.size() > 0 ? cursoNotas : null);
         }catch(Exception e){
-            System.out.println("------> Error: " + e.getMessage());
-            model.addAttribute("error", "Ocurrió un error al buscar el registro");
+            model.addAttribute("message", "Ocurrió un error al buscar el registro");
         }
         return "evaluaciones/list";  
+    }
+
+
+    @GetMapping("/notas-alumno")
+    public String getListadoEvaluaciones( 
+        Model model,
+        RedirectAttributes redirectAttributes
+    ) {
+       try{
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            List<CursoNotasDTO[]> cursoNotas = evaluacionesService.getEstudianteNotasByUserEmail(auth.getName());
+            model.addAttribute("data", cursoNotas.size() > 0 ? cursoNotas : null);
+            model.addAttribute("menu","notas");
+            return "evaluaciones/evaluaciones-list";  
+        }catch(Exception e){
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("code", 500);  // Error interno del servidor
+            return "redirect:/home";  
+        }
     }
 
 

@@ -72,7 +72,7 @@ public class EstudiantesCursosWebController {
             model.addAttribute("data", estudianteCurso);
             return "estudiantes-cursos/editar";
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al buscar el registro");
+            model.addAttribute("message", "Ocurrió un error al buscar el registro");
             return "redirect:/error";
         }
     }
@@ -91,7 +91,7 @@ public class EstudiantesCursosWebController {
             estudianteCursoService.update(id, estudianteCursoDTO.getEstudiante().getId(), estudianteCursoDTO.getCurso().getId());
             return "redirect:/estudiantes-cursos";
         }catch(Exception e){
-            model.addAttribute("error", "Ocurrió un error al actualizar el registro");
+            model.addAttribute("message", "Ocurrió un error al actualizar el registro");
             return "redirect:/error";
         }
     }

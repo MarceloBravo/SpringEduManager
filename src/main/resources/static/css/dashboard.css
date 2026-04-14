@@ -1,0 +1,23 @@
+main{
+    background-color: #f1f4f5;
+    padding-bottom: 0px !important;
+}
+
+.row h1, 
+.row h2{
+    color: #054f61;
+}
+
+.row{
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.welcome-title{
+    text-align: center;
+    color: #054f61;
+    position: absolute;
+    top: 40%;
+    left: 49%;
+    font-style: italic;
+}

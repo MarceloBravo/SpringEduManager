@@ -79,7 +79,7 @@ public class AuthController {
             model.addAttribute("success", "Usuario registrado correctamente");
             return "redirect:/login";
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("message", e.getMessage());
             return "redirect:/register";
         }
         

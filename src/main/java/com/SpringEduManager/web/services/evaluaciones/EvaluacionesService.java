@@ -7,9 +7,12 @@ import com.SpringEduManager.web.dto.EvaluacionRequestDTO;
 
 public interface EvaluacionesService {
     
+    List<CursoNotasDTO[]> getEstudianteNotasByUserEmail(String userEmail);
+    
     List<CursoNotasDTO[]> getEstudianteNotas(Long estudianteId);
     
     Long save(EvaluacionRequestDTO request);
 
     void deleteById(Long id);
+    
 }
