@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.web.dto.UserDTO;
 import com.SpringEduManager.web.entities.Estudiante;
-import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.enums.RolesEnum;
 import com.SpringEduManager.web.repositories.EstudianteRepository;
 import com.SpringEduManager.web.services.usuarios.UserService;
