@@ -23,21 +23,45 @@ import com.SpringEduManager.web.repositories.EstudianteRepository;
 import com.SpringEduManager.web.repositories.EvaluacionRepository;
 import com.SpringEduManager.web.repositories.EstudianteCursoRepository;
 
+/**
+ * Implementación del servicio para la gestión de evaluaciones académicas.
+ * Proporciona lógica de negocio para CRUD y consultas especializadas
+ * de notas y evaluaciones con procesamiento de datos pivotizados.
+ */
 @Service
 public class EvaluacionesServiceImpl implements EvaluacionesService {
     
+    /**
+     * Repositorio para gestión de entidades Evaluacion.
+     */
     @Autowired
     private EvaluacionRepository evaluacionRepository;
 
+    /**
+     * Repositorio para validación de estudiantes.
+     */
     @Autowired
     private EstudianteRepository estudianteRepository;
 
+    /**
+     * Repositorio para validación de cursos.
+     */
     @Autowired
     private CursoRepository cursoRepository;
 
+    /**
+     * Repositorio para gestión de relaciones estudiante-curso.
+     */
     @Autowired
     private EstudianteCursoRepository estudianteCursoRepository;
 
+    /**
+     * Obtiene las evaluaciones y notas de un estudiante por su email.
+     * Busca al estudiante por email y delega al método que obtiene notas por ID.
+     * @param userEmail Email del estudiante a buscar
+     * @return Lista de arrays con datos de cursos y evaluaciones pivotizados
+     * @throws RuntimeException si el estudiante no existe
+     */
     @Override
     public List<CursoNotasDTO[]> getEstudianteNotasByUserEmail(String userEmail){
         Estudiante estudiante = estudianteRepository.findByEmail(userEmail).orElse(null);

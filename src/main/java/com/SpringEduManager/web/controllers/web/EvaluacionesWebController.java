@@ -21,13 +21,28 @@ import com.SpringEduManager.web.services.evaluaciones.EvaluacionesService;
 
 import org.springframework.ui.Model;
 
+/**
+ * Controlador web para la gestión de evaluaciones y notas de estudiantes.
+ * Proporciona endpoints para consultar y gestionar evaluaciones por estudiante.
+ * Utiliza Spring Security para obtener el usuario autenticado y mostrar sus notas.
+ */
 @Controller
 @RequestMapping("/cursos-evaluaciones")
 public class EvaluacionesWebController {
 
+    /**
+     * Servicio para la gestión de evaluaciones y notas.
+     */
     @Autowired
     private EvaluacionesService evaluacionesService;
 
+    /**
+     * Muestra las evaluaciones y notas de un estudiante específico.
+     * GET /cursos-evaluaciones/alumno/{id}
+     * @param id ID del estudiante a consultar
+     * @param model Modelo para pasar datos a la vista
+     * @return Nombre de la plantilla con las evaluaciones del estudiante
+     */
     @GetMapping("/alumno/{id}")
     public String getEvaluaciones(
         @PathVariable(name = "id", required = true) Long id, 
@@ -43,6 +58,14 @@ public class EvaluacionesWebController {
     }
 
 
+    /**
+     * Muestra las evaluaciones y notas del usuario autenticado.
+     * GET /cursos-evaluaciones/notas-alumno
+     * Utiliza Spring Security para obtener el email del usuario autenticado.
+     * @param model Modelo para pasar datos a la vista
+     * @param redirectAttributes Atributos para redirección con mensajes
+     * @return Nombre de la plantilla con las evaluaciones del usuario
+     */
     @GetMapping("/notas-alumno")
     public String getListadoEvaluaciones( 
         Model model,
@@ -56,12 +79,19 @@ public class EvaluacionesWebController {
             return "evaluaciones/evaluaciones-list";  
         }catch(Exception e){
             redirectAttributes.addFlashAttribute("message", e.getMessage());
-            redirectAttributes.addFlashAttribute("code", 500);  // Error interno del servidor
+            redirectAttributes.addFlashAttribute("code", 500);
             return "redirect:/home";  
         }
     }
 
 
+    /**
+     * Registra una nueva evaluación para un estudiante.
+     * POST /cursos-evaluaciones/grabar
+     * @param request DTO con los datos de la evaluación a registrar
+     * @param model Modelo para pasar datos a la vista
+     * @return Map con mensaje de éxito o error en formato JSON
+     */
     @PostMapping("/grabar")
     @ResponseBody   
     public Map<String, String> grabar(
@@ -79,6 +109,12 @@ public class EvaluacionesWebController {
         }
     }
 
+    /**
+     * Elimina una evaluación existente.
+     * POST /cursos-evaluaciones/eliminar/{id}
+     * @param id ID de la evaluación a eliminar
+     * @return Map con mensaje de éxito o error en formato JSON
+     */
     @PostMapping("/eliminar/{id}")
     @ResponseBody
     public Map<String, String> eliminar(@PathVariable("id") Long id){

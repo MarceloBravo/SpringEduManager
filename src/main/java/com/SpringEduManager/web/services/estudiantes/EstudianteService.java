@@ -6,14 +6,27 @@ import org.springframework.data.domain.Page;
 
 import com.SpringEduManager.web.dto.EstudianteDTO;
 
+/**
+ * Interfaz de servicio para la gestión de estudiantes.
+ * Define las operaciones CRUD y consultas especializadas para
+ * la administración de estudiantes académicos.
+ */
 public interface EstudianteService {
     
     /**
-     * Obtiene todos los estudiantes
+     * Obtiene todos los estudiantes sin filtros.
      * @return Lista de EstudianteDTO con todos los estudiantes
      */
     List<EstudianteDTO> getAll();
 
+    /**
+     * Busca estudiantes en múltiples campos con paginación.
+     * @param searchTerm Término de búsqueda para nombre, apellido y email
+     * @param page Número de página
+     * @param size Tamaño de página
+     * @param sortBy Campo de ordenamiento
+     * @return Página de estudiantes que coinciden con la búsqueda
+     */
     Page<EstudianteDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy);
     
     /**

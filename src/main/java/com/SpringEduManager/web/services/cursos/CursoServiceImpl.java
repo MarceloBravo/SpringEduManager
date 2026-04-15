@@ -13,9 +13,17 @@ import com.SpringEduManager.web.dto.CursoDTO;
 import com.SpringEduManager.web.entities.Curso;
 import com.SpringEduManager.web.repositories.CursoRepository;
 
+/**
+ * Implementación del servicio para la gestión de cursos.
+ * Proporciona lógica de negocio para CRUD y consultas especializadas
+ * de cursos académicos con conversión a DTOs.
+ */
 @Service
 public class CursoServiceImpl implements CursoService {
 
+    /**
+     * Repositorio para gestión de entidades Curso.
+     */
     @Autowired
     private CursoRepository repository;
 
@@ -44,6 +52,15 @@ public class CursoServiceImpl implements CursoService {
     }
 
 
+    /**
+     * Busca cursos en múltiples campos con paginación.
+     * @param searchTerm Término de búsqueda para nombre y descripción
+     * @param page Número de página
+     * @param size Tamaño de página
+     * @param sortBy Campo de ordenamiento
+     * @return Página de cursos que coinciden con la búsqueda
+     */
+    @Override
     public Page<CursoDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy){
         sortBy = (sortBy == null || sortBy.isEmpty()) ? "nombre" : sortBy;
         

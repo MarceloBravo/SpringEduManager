@@ -12,6 +12,12 @@ import org.springframework.data.repository.query.Param;
 
 import com.SpringEduManager.web.entities.Estudiante;
 
+/**
+ * Repositorio para la gestión de entidades Estudiante.
+ * Proporciona métodos de consulta personalizados para buscar estudiantes
+ * por nombre, apellido, email y búsquedas combinadas con paginación.
+ * Incluye métodos optimizados con JOIN FETCH para evitar problemas N+1.
+ */
 @Repository
 public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
     
@@ -36,7 +42,13 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
      */
     Optional<Estudiante> findByEmail(String email);
 
-    // Búsqueda con condiciones OR y paginación - Busca en nombre, apellido y email
+    /**
+     * Busca estudiantes en múltiples campos (nombre, apellido, email) con paginación.
+     * Utiliza condiciones OR para buscar coincidencias en cualquiera de los campos.
+     * @param search Término de búsqueda (case insensitive)
+     * @param pageable Configuración de paginación y ordenamiento
+     * @return Página de estudiantes que coinciden con la búsqueda
+     */
     @Query("SELECT e FROM Estudiante e WHERE " +
            "(LOWER(e.nombre) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "LOWER(e.apellido) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
@@ -49,8 +61,10 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
     // ===== MÉTODOS OPTIMIZADOS CON JOIN FETCH =====
     
     /**
-     * Obtiene un estudiante con sus cursos usando JOIN FETCH
-     * Evita el problema N+1 cargando los cursos en una sola consulta
+     * Obtiene un estudiante con sus cursos usando JOIN FETCH.
+     * Evita el problema N+1 cargando los cursos en una sola consulta.
+     * @param estudianteId ID del estudiante a buscar
+     * @return Estudiante con sus cursos cargados
      */
     @Query("SELECT DISTINCT e FROM Estudiante e " +
            "LEFT JOIN FETCH e.cursos c " +
@@ -58,8 +72,10 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
     Estudiante findEstudianteWithCursos(@Param("estudianteId") Long estudianteId);
     
     /**
-     * Obtiene estudiantes con sus cursos (paginado)
-     * Usar con cuidado - puede generar mucho datos
+     * Obtiene todos los estudiantes con sus cursos usando JOIN FETCH (paginado).
+     * Usar con cuidado - puede generar mucho datos al cargar todas las relaciones.
+     * @param pageable Configuración de paginación y ordenamiento
+     * @return Página de estudiantes con sus cursos cargados
      */
     @Query("SELECT DISTINCT e FROM Estudiante e " +
            "LEFT JOIN FETCH e.cursos c " +
@@ -67,7 +83,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
     Page<Estudiante> findAllEstudiantesWithCursos(Pageable pageable);
     
     /**
-     * Busca estudiantes por nombre y carga sus cursos
+     * Busca estudiantes por nombre y carga sus cursos usando JOIN FETCH.
+     * Filtra por nombre (case insensitive) y evita el problema N+1.
+     * @param nombre Nombre o parte del nombre a buscar
+     * @param pageable Configuración de paginación y ordenamiento
+     * @return Página de estudiantes que coinciden con sus cursos cargados
      */
     @Query("SELECT DISTINCT e FROM Estudiante e " +
            "LEFT JOIN FETCH e.cursos c " +

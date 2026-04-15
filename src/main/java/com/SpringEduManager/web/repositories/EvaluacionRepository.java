@@ -81,5 +81,14 @@ public interface EvaluacionRepository extends JpaRepository<Evaluacion, Long> {
               "WHERE e.id = :estudianteId " +
               ") sub " +
               "GROUP BY sub.id, sub.est_id, sub.curso_id, sub.est_nombre, sub.est_apellido, sub.est_email, sub.curso_nombre, sub.curso_descripcion", nativeQuery = true)
+    
+    /**
+     * Obtiene las notas de un estudiante en formato pivotizado.
+     * Utiliza una consulta SQL nativa compleja con ROW_NUMBER() y MAX(CASE WHEN)
+     * para transformar evaluaciones en columnas (ev_nota_1, ev_nota_2, etc.).
+     * Retorna datos como Object[] para ser procesados por el servicio.
+     * @param estudianteId ID del estudiante a consultar
+     * @return Lista de Object[] con datos pivotizados del estudiante
+     */
     List<Object[]> findEstudianteNotas(@Param("estudianteId") Long estudianteId);
 }

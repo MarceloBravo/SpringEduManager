@@ -16,14 +16,31 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * Implementación del servicio para la gestión de usuarios del sistema.
+ * Proporciona lógica de negocio para CRUD, autenticación y
+ * gestión de roles con conversión a DTOs.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
+    /**
+     * Repositorio para gestión de entidades Usuario.
+     */
     @Autowired
     private UserRepository repository;
+    
+    /**
+     * Codificador de contraseñas para seguridad.
+     */
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Obtiene todos los usuarios o filtra por nombre.
+     * @param nombre Nombre o parte del nombre a buscar (case insensitive)
+     * @return Lista de UserDTO que coinciden con la búsqueda
+     */
     @Override
     public List<UserDTO> getAll(String nombre){
         List<Usuario> usuarios;

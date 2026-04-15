@@ -6,17 +6,28 @@ import org.springframework.data.domain.Page;
 
 import com.SpringEduManager.web.dto.CursoDTO;
 
+/**
+ * Interfaz de servicio para la gestión de cursos.
+ * Define las operaciones CRUD y consultas especializadas para
+ * la administración de cursos académicos.
+ */
 public interface CursoService {
     
-    
-    
     /**
-     * @param nombre Nombre o parte del nombre a buscar
+     * Obtiene todos los cursos o filtra por nombre.
+     * @param nombre Nombre o parte del nombre a buscar (case insensitive)
      * @return Lista de CursoDTO que coinciden con la búsqueda
      */
     List<CursoDTO> getAll(String nombre);
 
-
+    /**
+     * Busca cursos en múltiples campos con paginación.
+     * @param searchTerm Término de búsqueda para nombre y descripción
+     * @param page Número de página
+     * @param size Tamaño de página
+     * @param sortBy Campo de ordenamiento
+     * @return Página de cursos que coinciden con la búsqueda
+     */
     Page<CursoDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy);
     
     /**

@@ -18,12 +18,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 
+/**
+ * Implementación del servicio para la gestión de estudiantes.
+ * Proporciona lógica de negocio para CRUD y consultas especializadas
+ * de estudiantes académicos con conversión a DTOs.
+ */
 @Service
 public class EstudianteServiceImpl implements EstudianteService {
 
+    /**
+     * Repositorio para gestión de entidades Estudiante.
+     */
     @Autowired
     private EstudianteRepository repository;
 
+    /**
+     * Servicio de usuarios para gestión de cuentas asociadas.
+     */
     @Autowired
     private UserService userService;
 
@@ -46,6 +57,15 @@ public class EstudianteServiceImpl implements EstudianteService {
                 .toList();
     }
 
+    /**
+     * Busca estudiantes en múltiples campos con paginación.
+     * @param searchTerm Término de búsqueda para nombre, apellido y email
+     * @param page Número de página
+     * @param size Tamaño de página
+     * @param sortBy Campo de ordenamiento
+     * @return Página de estudiantes que coinciden con la búsqueda
+     */
+    @Override
     public Page<EstudianteDTO> searchInAllFields(String searchTerm, int page, int size, String sortBy){
         sortBy = (sortBy == null || sortBy.isEmpty()) ? "nombre" : sortBy;
 

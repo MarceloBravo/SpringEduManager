@@ -19,12 +19,15 @@ import com.SpringEduManager.web.services.evaluaciones.EvaluacionesService;
 @RestController
 public class EvaluacionesRestController {
 
+    /**
+     * Servicio para la gestión de evaluaciones y notas.
+     */
     @Autowired
     private EvaluacionesService evaluacionesService;
 
     /**
-     * Obtiene todas las evaluaciones o las filtra por curso o estudiante.
-     * 
+     * Obtiene todas las evaluaciones de un estudiante específico.
+     * GET /api/evaluaciones/{id}
      * @param id ID del estudiante para filtrar
      * @return Mapa con datos de evaluaciones o mensaje de error
      */
@@ -34,15 +37,18 @@ public class EvaluacionesRestController {
     ) {
         try{
             List<CursoNotasDTO[]> cursoNotas = evaluacionesService.getEstudianteNotas(id);
-            System.out.println(cursoNotas);
             return Map.of("data", cursoNotas.size() > 0 ? cursoNotas : new CursoNotasDTO[0]);
        }catch(Exception e){
-            System.out.println("Error: " + e.getMessage());
             return Map.of("error", "Ocurrió un error al obtener los cursos y sus evaluaciones");
        }
     }
 
-    
+    /**
+     * Elimina una evaluación existente por su ID.
+     * DELETE /api/evaluaciones/{id}
+     * @param id ID de la evaluación a eliminar
+     * @return Mapa con mensaje de éxito o error
+     */
     @DeleteMapping("/api/evaluaciones/{id}")
     public Map<String, Object> delete(
         @PathVariable("id") Long id
