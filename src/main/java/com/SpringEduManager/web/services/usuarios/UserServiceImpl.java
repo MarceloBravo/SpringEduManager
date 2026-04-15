@@ -132,9 +132,6 @@ public class UserServiceImpl implements UserService {
         user.setEmail(_user.getEmail());
         user.setPassword(pwd);
         user.setRole(_user.getRole());
-        System.out.println("Usuario a guardar: " + user.getId() + " - " + user.getNombre() + " - " + user.getApellido() + " - " + user.getEmail() + " - " + user.getPassword() + " - " + user.getRole());
-        System.out.println("Valor del role (enum): " + _user.getRole());
-        System.out.println("Valor del role (numérico): " + (_user.getRole() != null ? _user.getRole().getRole() : "NULL"));
         return this.repository.save(user).getId();
     }
 

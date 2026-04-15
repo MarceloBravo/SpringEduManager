@@ -134,8 +134,6 @@ public class EstudianteCursoServiceImpl implements EstudianteCursoService {
      */
     @Override
     public Long save(Long estudianteId, Long cursoId) {
-        System.out.println("Estudiante ID: " + estudianteId);
-        System.out.println("Curso ID: " + cursoId);
         EstudianteCurso estudianteCurso = this.validaDatos(estudianteId, cursoId);
 
         return this.estudianteCursoRepository.save(estudianteCurso).getId();
