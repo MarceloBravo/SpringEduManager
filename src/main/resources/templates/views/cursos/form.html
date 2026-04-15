@@ -49,6 +49,14 @@
         <div class="container mx-auto">
             <h1 class="text-3xl font-bold mb-6">Mantenedor de Cursos</h1>
             
+            <div class="my-breadcrumb">
+                <a href="/home">Inicio</a>
+                <span>/</span>
+                <a href="/cursos/list">Lista de Cursos</a>
+                <span>/</span>
+                <span>Mantenedor de Cursos</span>
+            </div>
+            
             <form th:object="${curso}" th:action="@{/cursos/save}" id="saveForm" method="post">
                 <input type="hidden" th:field="*{id}" />
                 <div class="form-group row">

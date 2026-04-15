@@ -13,3 +13,11 @@
 .btn-primary{
     background-color: #365e77 !important;
 }
+
+.my-breadcrumb{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #0380a7;
+}

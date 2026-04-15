@@ -33,3 +33,15 @@
 .delete-column{
     display: none;
 }
+
+.a-to-back{
+    text-decoration: none;
+    color: #000;
+    display: inline-flex;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.a-to-back span{
+    padding: 5px 5px 0px 0px !important;
+}

@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="/css/evaluaciones-list.css" type="text/css" />
     <link rel="stylesheet" href="/css/sidebar.css" type="text/css" />
     <link rel="stylesheet" href="/css/toast.css" type="text/css" />
+    <link rel="stylesheet" href="/css/global.css" type="text/css" />
 
     <script src="/js/evaluaciones-list.js"></script>
     <script src="/js/toast.js"></script>
@@ -42,6 +43,13 @@
     <main class="ml-64 p-8">
         <div class="container mx-auto">
             <h1 class="text-3xl font-bold mb-6">Cursos y Evaluaciones</h1>
+
+            <div class="my-breadcrumb">
+                <a href="/home">Inicio</a>
+                <span>/</span>
+                <span>Cursos y Evaluaciones</span>
+            </div>
+
             <input type="hidden" id="estudianteId" th:value="${data[0][0].estudiante.id}">
             <div class="mb-6 top-tool-bar">
                 <div class="col-6 text-left">

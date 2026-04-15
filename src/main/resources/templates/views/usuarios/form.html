@@ -49,6 +49,14 @@
         <div class="container mx-auto">
             <h1 class="text-3xl font-bold mb-6">Mantenedor de Usuarios</h1>
             
+            <div class="my-breadcrumb">
+                <a href="/home">Inicio</a>
+                <span>/</span>
+                <a href="/users/list">Lista de Usuarios</a>
+                <span>/</span>
+                <span>Mantenedor de Usuarios</span>
+            </div>
+
             <form th:object="${user}" th:action="@{/users/save}" id="saveForm" method="post">
                 <input type="hidden" th:field="*{id}" />
                 <div class="form-group row">

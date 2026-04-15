@@ -43,7 +43,7 @@
                     </h1>
                 </div>
                 <div class="mt-20">
-                    <h2 class="font-headline text-5xl font-extrabold text-on-primary leading-tight mb-6">
+                    <h2 class="font-headline text-4xl font-extrabold text-on-primary leading-tight mb-6">
                         Administración de Cursos, Notas y Estudiantes.
                     </h2>
                     <p class="text-on-primary-fixed-variant text-lg max-w-sm leading-relaxed opacity-90">
@@ -123,6 +123,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="role" value="ADMIN" />
+                        
                         <div class="col-md-6">
                             <label for="rol">Rol</label>
                             <div class="relative">
@@ -131,19 +133,11 @@
                                     class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline-variant text-xl"
                                     data-icon="manage_accounts">manage_accounts</span>
                                 <select
+                                    disabled
                                     class="form-control"
-                                    required
-                                    th:field="*{role}"
                                     id="role">
-                                        <option disabled="" selected="" value="">Seleccione su rol</option>
-                                        <option value="USER">Usuario General</option>
-                                        <option value="STUDENT">Estudiante</option>
-                                        <option value="TEACHER">Profesor</option>
-                                        <option value="ADMIN">Administrador del Sistema</option>
+                                        <option value="ADMIN" selected>Administrador del Sistema</option>
                                 </select>
-                                <span
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline-variant pointer-events-none"
-                                    data-icon="expand_more">expand_more</span>
 
                             </div>
                         </div>
@@ -196,6 +190,8 @@
                         ">
                         Completar Registro
                     </button>
+
+                    
                     <div class="text-center pt-4">
                         <p class="text-on-surface-variant text-sm">
                             ¿Ya tienes una cuenta?
