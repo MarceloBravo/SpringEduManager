@@ -57,7 +57,6 @@ public class EvaluacionesRestController {
             evaluacionesService.deleteById(id);
             return Map.of("success", "Evaluación eliminada correctamente");
        }catch(Exception e){
-            System.out.println("Error: " + e.getMessage());
             return Map.of("error", "Ocurrió un error al eliminar la evaluación");
        }
     }

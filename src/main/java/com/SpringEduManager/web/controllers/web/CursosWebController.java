@@ -65,7 +65,6 @@ public class CursosWebController {
                model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
            }
         }catch(Exception e){
-            System.out.println(e.getMessage());
             model.addAttribute("message", "Ocurrió un error al buscar el listado de registros");
             model.addAttribute("code", 500);
         }
