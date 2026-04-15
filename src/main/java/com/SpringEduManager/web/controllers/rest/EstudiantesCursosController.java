@@ -30,25 +30,16 @@ public class EstudiantesCursosController {
     private EstudianteCursoService estudianteCursoService;
 
     /**
-     * Obtiene todas las asignaciones estudiante-curso con filtros opcionales.
-     * GET /api/estudiantes-cursos
-     * @param cursoId ID del curso para filtrar (opcional)
+     * Obtiene todas las asignaciones estudiante-curso o filtra por estudiante específico.
+     * GET /api/estudiantes-cursos?estudiante={id}
      * @param estudianteId ID del estudiante para filtrar (opcional)
      * @return Map con lista de asignaciones o mensaje de error
-     * @throws IllegalArgumentException si se especifican ambos parámetros
      */
     @GetMapping("/api/estudiantes-cursos")
     public Map<String, Object> getAll(
-        @RequestParam(name= "curso", required=false) Long cursoId,
         @RequestParam(name= "estudiante", required=false) Long estudianteId
     ){
         try{
-            if(cursoId != null && estudianteId != null){
-                throw new IllegalArgumentException("No se puede especificar ambos parámetros curso y estudiante");
-            }
-            if(cursoId != null){
-                return Map.of("data", estudianteCursoService.findByCursoId(cursoId));
-            }
             if(estudianteId != null){
                 return Map.of("data", estudianteCursoService.findByEstudianteId(estudianteId));
             }
@@ -59,10 +50,10 @@ public class EstudiantesCursosController {
     }
 
     /**
-     * Obtiene una asignación específica por su ID.
+     * Obtiene las asignaciones de un estudiante por su ID.
      * GET /api/estudiantes-cursos/{id}
-     * @param id ID de la asignación a buscar
-     * @return Map con la asignación encontrada o mensaje de error
+     * @param id ID del estudiante para buscar sus asignaciones
+     * @return Map con lista de asignaciones del estudiante o mensaje de error
      */
     @GetMapping("/api/estudiantes-cursos/{id}")
     public Map<String, Object> getById(@PathVariable("id") Long id){
@@ -84,7 +75,7 @@ public class EstudiantesCursosController {
         try{
             Long id = estudianteCursoService.save(request.estudianteId(), request.cursoId());
             if(id == null){
-                return Map.of("error", "No se pudo asignar el estudiante al curso");
+                return Map.of("message", "No se pudo asignar el estudiante al curso");
             }
             return Map.of("data", Map.of("message", "El estudiante ha sido asignado al curso exitosamente"));
         }catch(Exception e){
@@ -104,7 +95,7 @@ public class EstudiantesCursosController {
         try{
             Long savedId = estudianteCursoService.update(id, request.estudianteId(), request.cursoId());
             if(savedId == null){
-                return Map.of("error", "No se pudo actualizar la asignación");
+                return Map.of("message", "No se pudo actualizar la asignación");
             }
             return Map.of("data", Map.of("message", "La asignación ha sido actualizada exitosamente"));
         }catch(Exception e){

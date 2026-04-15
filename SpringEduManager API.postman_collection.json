@@ -1,0 +1,724 @@
+{
+  "info": {
+    "_postman_id": "14f8510d-d6d3-47e2-bbd2-db4fea6b2f3d",
+    "name": "SpringEduManager API",
+    "description": "Colección de endpoints para el sistema de gestión educativa SpringEduManager",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "5829357"
+  },
+  "item": [
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "GET All Users (sin paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/all?filtro={{filtro}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "filtro",
+                  "value": "{{filtro}}",
+                  "description": "Filtro opcional por nombre (case insensitive)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Users (con paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users?filtro={{filtro}}&page={{page}}&size={{size}}&sortBy={{sortBy}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "filtro",
+                  "value": "{{filtro}}",
+                  "description": "Filtro opcional por nombre (case insensitive)"
+                },
+                {
+                  "key": "page",
+                  "value": "{{page}}",
+                  "description": "Número de página (default: 0)"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}",
+                  "description": "Tamaño de página (default: 10)"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "{{sortBy}}",
+                  "description": "Campo de ordenamiento (default: nombre)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"email\": \"juan.perez@email.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Actualizado\",\n  \"apellido\": \"Pérez\",\n  \"email\": \"juan.perez.actualizado@email.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cursos",
+      "item": [
+        {
+          "name": "GET All Courses (sin paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cursos/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cursos",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Courses (con paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cursos?filtro={{filtro}}&page={{page}}&size={{size}}&sortBy={{sortBy}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cursos"
+              ],
+              "query": [
+                {
+                  "key": "filtro",
+                  "value": "{{filtro}}",
+                  "description": "Filtro opcional por nombre (case insensitive)"
+                },
+                {
+                  "key": "page",
+                  "value": "{{page}}",
+                  "description": "Número de página (default: 0)"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}",
+                  "description": "Tamaño de página (default: 10)"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "{{sortBy}}",
+                  "description": "Campo de ordenamiento (default: nombre)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Course by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cursos/{{cursoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cursos",
+                "{{cursoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Matemáticas Avanzadas\",\n  \"descripcion\": \"Curso de matemáticas para nivel avanzado\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cursos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cursos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Course",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Matemáticas Avanzadas (Actualizado)\",\n  \"descripcion\": \"Curso actualizado de matemáticas para nivel avanzado\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cursos/{{cursoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cursos",
+                "{{cursoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Course",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cursos/{{cursoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cursos",
+                "{{cursoId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estudiantes",
+      "item": [
+        {
+          "name": "GET All Students (sin paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes/all?filtro={{filtro}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "filtro",
+                  "value": "{{filtro}}",
+                  "description": "Filtro opcional por nombre (case insensitive)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Students (con paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes?filtro={{filtro}}&page={{page}}&size={{size}}&sortBy={{sortBy}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes"
+              ],
+              "query": [
+                {
+                  "key": "filtro",
+                  "value": "{{filtro}}",
+                  "description": "Filtro opcional por nombre (case insensitive)"
+                },
+                {
+                  "key": "page",
+                  "value": "{{page}}",
+                  "description": "Número de página (default: 0)"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}",
+                  "description": "Tamaño de página (default: 10)"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "{{sortBy}}",
+                  "description": "Campo de ordenamiento (default: nombre)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Student by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes/{{estudianteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes",
+                "{{estudianteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"María\",\n  \"apellido\": \"García\",\n  \"email\": \"maria.garcia@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Student",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"María Actualizada\",\n  \"apellido\": \"García\",\n  \"email\": \"maria.garcia.actualizada@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes/{{estudianteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes",
+                "{{estudianteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Student",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes/{{estudianteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes",
+                "{{estudianteId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Evaluaciones",
+      "item": [
+        {
+          "name": "GET Evaluations by Student ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/evaluaciones/{{estudianteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "evaluaciones",
+                "{{estudianteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Evaluation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/evaluaciones/{{evaluacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "evaluaciones",
+                "{{evaluacionId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estudiantes-Cursos",
+      "item": [
+        {
+          "name": "GET Student-Course Assignments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes-cursos?estudiante={{estudianteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes-cursos"
+              ],
+              "query": [
+                {
+                  "key": "estudiante",
+                  "value": "{{estudianteId}}",
+                  "description": "ID del estudiante para filtrar (opcional)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Student-Course Assignment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes-cursos/{{asignacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes-cursos",
+                "{{asignacionId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Student-Course Assignment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudianteId\": 1,\n  \"cursoId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes-cursos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes-cursos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Student-Course Assignment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudianteId\": 3,\n  \"cursoId\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes-cursos/{{asignacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes-cursos",
+                "{{asignacionId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Student-Course Assignment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/estudiantes-cursos/{{asignacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "estudiantes-cursos",
+                "{{asignacionId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "filtro",
+      "value": ""
+    },
+    {
+      "key": "page",
+      "value": "0"
+    },
+    {
+      "key": "size",
+      "value": "10"
+    },
+    {
+      "key": "sortBy",
+      "value": "nombre"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "cursoId",
+      "value": "1"
+    },
+    {
+      "key": "estudianteId",
+      "value": "1"
+    },
+    {
+      "key": "evaluacionId",
+      "value": "1"
+    },
+    {
+      "key": "asignacionId",
+      "value": "1"
+    }
+  ]
+}

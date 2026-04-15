@@ -34,13 +34,9 @@ public class CursoServiceImpl implements CursoService {
      * @return Lista de CursoDTO que coinciden con la búsqueda
      */
     @Override
-    public List<CursoDTO> getAll(String nombre){
+    public List<CursoDTO> getAll(){
         List<Curso> cursos;
-        if(nombre == null || nombre.isEmpty()){
-            cursos = this.repository.findAll();
-        }else{
-            cursos = this.repository.findByNombreContainingIgnoreCase(nombre);
-        }        
+        cursos = this.repository.findAll();
         return cursos
                 .stream()
                 .map(curso -> new CursoDTO(

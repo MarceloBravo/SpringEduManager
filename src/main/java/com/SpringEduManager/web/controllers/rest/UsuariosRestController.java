@@ -74,7 +74,7 @@ public class UsuariosRestController {
             if(user != null){
                 return Map.of("data", user);
             } else {
-                return Map.of("error", "Usuario no encontrado");
+                return Map.of("message", "Usuario no encontrado");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al buscar el usuario: " + e.getMessage());
@@ -96,7 +96,7 @@ public class UsuariosRestController {
             if(newUser != null){
                 return Map.of("data", Map.of("message", "El usuario ha sido creado exitosamente", "user", newUser));
             } else {
-                return Map.of("error", "No se pudo crear el usuario");
+                return Map.of("message", "No se pudo crear el usuario");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al crear el usuario: " + e.getMessage());
@@ -120,7 +120,7 @@ public class UsuariosRestController {
             if(updatedUser != null){
                 return Map.of("data", Map.of("message", "El usuario ha sido actualizado exitosamente", "user", updatedUser));
             } else {
-                return Map.of("error", "No se pudo actualizar el usuario");
+                return Map.of("message", "No se pudo actualizar el usuario");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al actualizar el usuario: " + e.getMessage());

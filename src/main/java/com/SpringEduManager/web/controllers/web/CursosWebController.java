@@ -65,6 +65,7 @@ public class CursosWebController {
                model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
            }
         }catch(Exception e){
+            System.out.println(e.getMessage());
             model.addAttribute("message", "Ocurrió un error al buscar el listado de registros");
             model.addAttribute("code", 500);
         }
@@ -73,6 +74,12 @@ public class CursosWebController {
     }
 
 
+    /**
+     * Busca cursos para ser utilizados en componentes JavaScript.
+     * GET /cursos/js-search
+     * @param filtro Término de búsqueda para filtrar cursos
+     * @return Lista de cursos que coinciden con el filtro (sin paginación)
+     */
     @GetMapping("/js-search")
     @ResponseBody   
     public List<CursoDTO> buscarCursos(
@@ -208,10 +215,18 @@ public class CursosWebController {
         return "redirect:/cursos/list";
     }
 
+    /**
+     * Establece el atributo de menú para redirect attributes.
+     * @param redirectAttributes RedirectAttributes para pasar el menú activo
+     */
     private void setMenuAttribute(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("menu","cursos");
     }
     
+    /**
+     * Establece el atributo de menú para el modelo.
+     * @param model Modelo para pasar el menú activo a la vista
+     */
     private void setMenuAttribute(Model model) {
         model.addAttribute("menu","cursos");
     }

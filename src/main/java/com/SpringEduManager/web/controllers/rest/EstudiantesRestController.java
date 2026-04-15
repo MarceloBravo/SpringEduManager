@@ -73,7 +73,7 @@ public class EstudiantesRestController {
             if(estudiante != null){
                 return Map.of("data", estudiante);
             } else {
-                return Map.of("error", "Estudiante no encontrado");
+                return Map.of("message", "Estudiante no encontrado");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al buscar el estudiante: " + e.getMessage());
@@ -94,7 +94,7 @@ public class EstudiantesRestController {
             if(newEstudiante != null){
                 return Map.of("data", Map.of("message", "El estudiante ha sido creado exitosamente", "estudiante", newEstudiante));
             } else {
-                return Map.of("error", "No se pudo crear el estudiante");
+                return Map.of("message", "No se pudo crear el estudiante");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al crear el estudiante: " + e.getMessage());
@@ -117,7 +117,7 @@ public class EstudiantesRestController {
             if(updatedEstudiante != null){
                 return Map.of("data", Map.of("message", "El estudiante ha sido actualizado exitosamente", "estudiante", updatedEstudiante));
             } else {
-                return Map.of("error", "No se pudo actualizar el estudiante");
+                return Map.of("message", "No se pudo actualizar el estudiante");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al actualizar el estudiante: " + e.getMessage());

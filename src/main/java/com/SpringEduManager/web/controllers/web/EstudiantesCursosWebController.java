@@ -97,11 +97,11 @@ public class EstudiantesCursosWebController {
     }
 
     /**
-     * Elimina una asignación existente.
+     * Elimina una asignación existente con respuesta JSON.
      * POST /estudiantes-cursos/eliminar/{id}
      * @param id ID de la asignación a eliminar
      * @param model Modelo para pasar datos a la vista
-     * @return Redirección al listado o página de error
+     * @return Map con mensaje de éxito o error en formato JSON
      */
     @PostMapping("/eliminar/{id}")
     @ResponseBody

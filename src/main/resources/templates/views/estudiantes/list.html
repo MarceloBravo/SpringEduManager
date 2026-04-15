@@ -136,7 +136,7 @@
                     </div>
                     <div class="col-6">
                         <div class="mt-4 text-sm text-gray-600 text-right">
-                            Página <span th:text="${page + 1}">1</span> de <span th:text="${totalPages}">1</span>
+                            Página <span th:text="${page != null ? page + 1 : 1}">1</span> de <span th:text="${totalPages}">1</span>
                         </div>
                     </div>
                 </div>

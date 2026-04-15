@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", "Validatción fallida", "detalles", errors));
+                .body(Map.of("message", "Validatción fallida", "detalles", errors));
     }
 
     /**
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", ex.getMessage()));
+                .body(Map.of("message", ex.getMessage()));
     }
 
     /**
@@ -61,6 +61,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Ocurrió un error interno: " + ex.getMessage()));
+                .body(Map.of("message", "Ocurrió un error interno: " + ex.getMessage()));
     }
 }

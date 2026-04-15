@@ -238,7 +238,9 @@ public class EstudianteServiceImpl implements EstudianteService {
         user.setApellido(estudiante.getApellido());
         user.setEmail(estudiante.getEmail());
         user.setRole(RolesEnum.STUDENT);
-        user.setPassword(estudiante.getPassword());
+        if(estudiante.getPassword() != null && !estudiante.getPassword().trim().isEmpty()){
+            user.setPassword(estudiante.getPassword());
+        }
         Long userId = this.userService.save(user);
         if(userId == null){
             throw new RuntimeException("Error al crear el usuario para el estudiante.");

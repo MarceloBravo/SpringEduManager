@@ -7,7 +7,7 @@
     <div th:fragment="toast" class="toast-container position-absolute top-0 end-0 p-3">
 
         <div 
-            th:if="${message != null and not #strings.isEmpty(message)}" 
+            th:if="${message != null and not #strings.isEmpty(message)} or ${error != null and not #strings.isEmpty(error)}" 
             id="feedback-toast" 
             class="toast toast-success"
             th:classappend="${code == 200} ? 'toast-success' : (${code == 400} ? 'toast-danger' : (${code == 500} ? 'toast-danger' : 'toast-info'))"
@@ -26,6 +26,9 @@
             </div>
             <div class="toast-body" th:text="${message}">
                 Mensaje del toast
+            </div>
+            <div class="toast-body" th:text="${error}">
+                Mensaje de error del toast
             </div>
         </div>
 

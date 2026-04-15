@@ -85,6 +85,12 @@ public class AuthController {
         
     }
 
+    /**
+     * Maneja el cierre de sesión del usuario.
+     * POST /auth/logout
+     * Spring Security maneja el logout automáticamente a través de la configuración.
+     * @return Redirect al formulario de login
+     */
     @PostMapping("/logout")
     public String logout(){
         return "redirect:/login";

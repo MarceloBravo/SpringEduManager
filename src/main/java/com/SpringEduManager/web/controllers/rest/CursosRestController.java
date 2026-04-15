@@ -32,9 +32,9 @@ public class CursosRestController {
 
 
     @GetMapping("/api/cursos/all")
-    public Map<String, List<CursoDTO>> getAll(@RequestParam(name= "filtro", required=false) String filtro){
+    public Map<String, List<CursoDTO>> getAll(){
         try{
-            return Map.of("data", cursoService.getAll(filtro));
+            return Map.of("data", cursoService.getAll());
         }catch(Exception e){
             return Map.of("error", List.of());
         }
@@ -54,8 +54,7 @@ public class CursosRestController {
         @RequestParam(name = "sortBy", defaultValue = "") String sortBy
     ){
         try{
-            Page<CursoDTO> cursos = null;
-            cursos = cursoService.searchInAllFields(filtro, page, size, sortBy);
+            Page<CursoDTO> cursos = cursoService.searchInAllFields(filtro, page, size, sortBy);
             return Map.of("data", cursos.getContent());
         }catch(Exception e){
             return Map.of("error", List.of());
@@ -75,7 +74,7 @@ public class CursosRestController {
             if(curso != null){
                 return Map.of("data", curso);
             } else {
-                return Map.of("error", "Curso no encontrado");
+                return Map.of("message", "Curso no encontrado");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al buscar el curso: " + e.getMessage());
@@ -96,7 +95,7 @@ public class CursosRestController {
             if(newCurso != null){
                 return Map.of("data", Map.of("message", "El curso ha sido creado exitosamente", "curso", newCurso));
             } else {
-                return Map.of("error", "No se pudo crear el curso");
+                return Map.of("message", "No se pudo crear el curso");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al crear el curso: " + e.getMessage());
@@ -119,7 +118,7 @@ public class CursosRestController {
             if(updatedCurso != null){
                 return Map.of("data", Map.of("message", "El curso ha sido actualizado exitosamente", "curso", updatedCurso));
             } else {
-                return Map.of("error", "No se pudo actualizar el curso");
+                return Map.of("message", "No se pudo actualizar el curso");
             }
         }catch(Exception e){
             return Map.of("error", "Ocurrió un error al actualizar el curso: " + e.getMessage());

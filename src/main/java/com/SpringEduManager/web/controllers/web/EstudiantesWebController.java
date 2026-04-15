@@ -30,6 +30,17 @@ public class EstudiantesWebController {
     private EstudianteService estudianteService;
     
 
+    /**
+     * Muestra el listado de estudiantes con paginación y filtros.
+     * GET /estudiantes/list
+     * @param filtro Filtro opcional para buscar por nombre, apellido o email
+     * @param page Número de página (default: 0)
+     * @param size Tamaño de página (default: 10)
+     * @param sortBy Campo de ordenamiento (default: nombre)
+     * @param model Modelo para pasar datos a la vista
+     * @param redirectAttributes Atributos para redirección con mensajes flash
+     * @return Nombre de la plantilla Thymeleaf
+     */
     @GetMapping("/list")
     public String getAll(
         @RequestParam(name = "filtro", required = false) String filtro,
@@ -182,10 +193,18 @@ public class EstudiantesWebController {
         return "redirect:/estudiantes/list";
     }
 
+    /**
+     * Establece el atributo de menú para redirect attributes.
+     * @param redirectAttributes RedirectAttributes para pasar el menú activo
+     */
     private void setMenuAttribute(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("menu","estudiantes");
     }
     
+    /**
+     * Establece el atributo de menú para el modelo.
+     * @param model Modelo para pasar el menú activo a la vista
+     */
     private void setMenuAttribute(Model model) {
         model.addAttribute("menu","estudiantes");
     }
