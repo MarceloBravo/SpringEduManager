@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
     @Query("SELECT u FROM Usuario u WHERE " +
            "(LOWER(u.nombre) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "(LOWER(u.apellido) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "(LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))))")
+           "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))))")
     Page<Usuario> searchInMultipleFields(
         @Param("search") String search,
         Pageable pageable
