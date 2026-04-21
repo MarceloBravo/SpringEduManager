@@ -160,10 +160,9 @@ public class EstudianteServiceImpl implements EstudianteService {
         String password = validaPassword(_estudiante);
         validaEmail(_estudiante);
         Usuario estudiante = new Usuario();
-        Usuario existing = null;
         if(_estudiante.getId() != null){
-            existing = this.repository.findById(_estudiante.getId()).orElse(null);            
-            estudiante.setId(_estudiante.getId());
+            Usuario existing = this.repository.findById(_estudiante.getId()).orElse(null);            
+            estudiante.setId(existing.getId());
         }
         estudiante.setNombre(_estudiante.getNombre());
         estudiante.setApellido(_estudiante.getApellido());
