@@ -1,0 +1,12 @@
+{
+    "java.server.launchMode": "standard",
+    "java.debug.settings.enableRunDebugCodeLens": true,
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.import.maven.enabled": true,
+    "java.project.importOnFirstTimeStartup": "automatic",
+    "java.extensions.checkVersion": false,
+    "java.autobuild.enabled": true,
+    "java.home": "",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.maxConcurrentBuilds": 1
+}

@@ -74,7 +74,7 @@ public interface EvaluacionRepository extends JpaRepository<Evaluacion, Long> {
                     "c.id as curso_id, c.nombre as curso_nombre, c.descripcion as curso_descripcion, " +
                     "ev.id as ev_id, ev.nota as ev_nota, ev.fecha as ev_fecha, " +
                     "ROW_NUMBER() OVER (PARTITION BY ec.id ORDER BY ev.id) AS fila_nota " +
-              "FROM estudiantes e " +
+              "FROM usuarios e " +
               "LEFT JOIN estudiante_cursos ec ON e.id = ec.estudiante_id " +
               "LEFT JOIN cursos c ON ec.curso_id = c.id " +
               "LEFT JOIN evaluaciones ev ON ec.id = ev.estudiante_curso_id " +

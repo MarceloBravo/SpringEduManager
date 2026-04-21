@@ -117,14 +117,13 @@
                         <select 
                             class="form-control input-box" 
                             id="input-role" 
-                            th:field="*{role}"
+                            th:field="*{roles}"
                             required
                         >
-                            <option disabled="" value="">Seleccionar rol</option>
-                            <option value="ADMIN">Administrador</option>
-                            <option value="TEACHER">Profesor</option>
-                            <option value="STUDENT">Estudiante</option>
-                            <option value="USER">Usuario</option>
+                            <option th:each="role : ${roles}" 
+                                    th:value="${role}" 
+                                    th:text="${role}">
+                            </option>
                         </select>
                     </div>
                 </div>

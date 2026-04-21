@@ -1,5 +1,7 @@
 package com.SpringEduManager.web.controllers.web;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.SpringEduManager.web.dto.UserDTO;
+import com.SpringEduManager.web.enums.RolesEnum;
 import com.SpringEduManager.web.services.usuarios.UserService;
 
 /**
@@ -49,9 +52,11 @@ public class RegistroDeUsuarioWebController {
     @PostMapping
     public String register(UserDTO userDTO) {
         try{
+            userDTO.setRoles(Set.of(RolesEnum.ADMIN));
             userService.save(userDTO);
             return "redirect:/login";
         }catch(Exception e){
+            System.out.println("Error: " + e.getMessage());
             return "redirect:/error";
         }
         

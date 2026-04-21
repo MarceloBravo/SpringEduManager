@@ -9,8 +9,8 @@ import com.SpringEduManager.web.dto.CursoDTO;
 import com.SpringEduManager.web.dto.EstudianteCursoDTO;
 import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.web.entities.Curso;
-import com.SpringEduManager.web.entities.Estudiante;
 import com.SpringEduManager.web.entities.EstudianteCurso;
+import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.repositories.CursoRepository;
 import com.SpringEduManager.web.repositories.EstudianteCursoRepository;
 import com.SpringEduManager.web.repositories.EstudianteRepository;
@@ -65,7 +65,7 @@ public class EstudianteCursoServiceImpl implements EstudianteCursoService {
      */
     @Override
     public EstudianteDTO findByEstudianteId(Long estudianteId) {
-        Estudiante estudianteCursos = this.estudianteRepository.findEstudianteWithCursos(estudianteId);
+        Usuario estudianteCursos = this.estudianteRepository.findEstudianteWithCursos(estudianteId);
         if(estudianteCursos == null) {
             throw new RuntimeException("Estudiante no encontrado");
         }
@@ -179,7 +179,7 @@ public class EstudianteCursoServiceImpl implements EstudianteCursoService {
      * @throws RuntimeException si el estudiante o curso no existen
      */
     private EstudianteCurso validaDatos(Long estudianteId, Long cursoId){
-        Estudiante estudiante = this.estudianteRepository.findById(estudianteId).orElse(null);
+        Usuario estudiante = this.estudianteRepository.findById(estudianteId).orElse(null);
         if(estudiante == null){
             throw new RuntimeException("Estudiante no encontrado");
         }

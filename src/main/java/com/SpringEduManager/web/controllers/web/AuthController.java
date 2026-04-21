@@ -75,7 +75,7 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserDTO userDTO, Model model){
         try{
-            this.service.register(userDTO);
+            this.service.save(userDTO);
             model.addAttribute("success", "Usuario registrado correctamente");
             return "redirect:/login";
         } catch (Exception e) {

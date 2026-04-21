@@ -2,6 +2,8 @@ package com.SpringEduManager.web.services.usuarios;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.SpringEduManager.web.dto.UserDTO;
+import com.SpringEduManager.web.entities.Rol;
 import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.enums.RolesEnum;
+import com.SpringEduManager.web.repositories.RolRepository;
 import com.SpringEduManager.web.repositories.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,6 +33,9 @@ public class UserServiceImpl implements UserService {
      */
     @Autowired
     private UserRepository repository;
+    
+    @Autowired
+    private RolRepository rolRepository;
     
     /**
      * Codificador de contraseñas para seguridad.
@@ -57,7 +64,10 @@ public class UserServiceImpl implements UserService {
                     usuario.getApellido(),
                     usuario.getEmail(),
                     usuario.getPassword(),
-                    usuario.getRole()
+                    usuario.getRoles()
+                        .stream()
+                        .map(Rol::getAuthority)
+                        .collect(Collectors.toSet())
                 ))
                 .toList();
     }
@@ -74,7 +84,7 @@ public class UserServiceImpl implements UserService {
         Page<Usuario> userPage;
         
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
-            userPage = repository.findAll(pageable);
+            userPage = repository.getAll(pageable);
         } else {
             userPage = repository.searchInMultipleFields(searchTerm, pageable);
         }
@@ -93,7 +103,8 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             return null;
         }
-        return new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), user.getRole());
+        Set<RolesEnum> roles = user.getRoles().stream().map(Rol::getAuthority).collect(Collectors.toSet());
+        return new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), roles);
     }
 
     /**
@@ -107,7 +118,8 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             return null;
         }
-        return new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), user.getRole());
+        Set<RolesEnum> roles = user.getRoles().stream().map(Rol::getAuthority).collect(Collectors.toSet());
+        return new UserDTO(user.getId(), user.getNombre(), user.getApellido(), user.getEmail(), user.getPassword(), roles);
     }
 
     /**
@@ -131,19 +143,16 @@ public class UserServiceImpl implements UserService {
         user.setApellido(_user.getApellido());
         user.setEmail(_user.getEmail());
         user.setPassword(pwd);
-        user.setRole(_user.getRole());
+        // Buscar o crear roles existentes
+        Set<Rol> roles = _user.getRoles().stream()
+                .map((RolesEnum roleEnum) -> {
+                    // Buscar si el rol ya existe
+                    return rolRepository.findByAuthority(roleEnum)
+                            .orElseGet(() -> rolRepository.save(new Rol(roleEnum)));
+                })
+                .collect(Collectors.toSet());
+        user.setRoles(roles);
         return this.repository.save(user).getId();
-    }
-
-    /**
-     * Registra un nuevo usuario con rol por defecto USER.
-     * Asigna automáticamente el rol USER antes de guardar el usuario.
-     * @param userDTO DTO con los datos del nuevo usuario a registrar
-     */
-    @Override
-    public void register(UserDTO userDTO) {
-        userDTO.setRole(RolesEnum.USER);
-        this.save(userDTO);
     }
 
     /**
@@ -234,7 +243,22 @@ public class UserServiceImpl implements UserService {
 
 
     /**
-     * Convierte Usuario a UserDTO
+     * Obtiene todos los usuarios ordenados por rol.
+     * @param page Número de página
+     * @param size Tamaño de página
+     * @return Página de usuarios ordenados por rol
+     */
+    @Override
+    public Page<UserDTO> findAllOrderedByRole(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Usuario> userPage = this.repository.findAllOrderedByRole(pageable);
+        return userPage.map(this::convertToDTO);
+    }
+
+    /**
+     * Convierte Usuario a UserDTO sin password
+     * @param usuario Usuario a convertir
+     * @return UserDTO sin password para ser devuelto en la API
      */
     private UserDTO convertToDTO(Usuario usuario) {
         UserDTO dto = new UserDTO();
@@ -242,7 +266,8 @@ public class UserServiceImpl implements UserService {
         dto.setNombre(usuario.getNombre());
         dto.setApellido(usuario.getApellido());
         dto.setEmail(usuario.getEmail());
-        dto.setRole(usuario.getRole());
+        Set<RolesEnum> roles = usuario.getRoles().stream().map((Rol e) -> RolesEnum.valueOf(e.getAuthority().name())).collect(Collectors.toSet());
+        dto.setRoles(roles);
         // No incluir password en el DTO para seguridad
         return dto;
     }

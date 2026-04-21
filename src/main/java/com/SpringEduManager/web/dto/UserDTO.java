@@ -13,6 +13,8 @@ import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.Set;
+
 public class UserDTO {
     @Null(groups = OnCreate.class, message = "El ID no debe ser proporcionado al crear")
     @NotNull(groups = OnUpdate.class, message = "El ID es obligatorio para actualizar")
@@ -36,18 +38,18 @@ public class UserDTO {
     @Size(min = 8, groups = OnCreate.class)
     private String password;
     
-    private RolesEnum role;
+    private Set<RolesEnum> roles;
     
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String nombre, String apellido, String email, String password, RolesEnum role) {
+    public UserDTO(Long id, String nombre, String apellido, String email, String password, Set<RolesEnum> roles) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
     }
     
     public Long getId() {
@@ -91,11 +93,11 @@ public class UserDTO {
         this.password = password;
     }
     
-    public RolesEnum getRole() {
-        return role;
+    public Set<RolesEnum> getRoles() {
+        return roles;
     }
     
-    public void setRole(RolesEnum role) {
-        this.role = role;
+    public void setRoles(Set<RolesEnum> roles) {
+        this.roles = roles;
     }
 }

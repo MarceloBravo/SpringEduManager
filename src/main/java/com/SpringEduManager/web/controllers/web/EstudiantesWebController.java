@@ -49,46 +49,31 @@ public class EstudiantesWebController {
         @RequestParam(name = "sortBy", required = false, defaultValue = "nombre") String sortBy,
         Model model, RedirectAttributes redirectAttributes
     ){
-        Page<EstudianteDTO> estudiantes = null;
-        
-        estudiantes = estudianteService.searchInAllFields(filtro, page, size, sortBy);
-        
-        model.addAttribute("estudiantes", estudiantes);
-        model.addAttribute("filtro", filtro);
-        model.addAttribute("page", page);
-        model.addAttribute("size", estudiantes.getSize());
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("totalPages", estudiantes.getTotalPages());
-        model.addAttribute("totalElements", estudiantes.getTotalElements());
-        model.addAttribute("url", "estudiantes");
-        
-        // Pasar mensajes flash al template si existen
-        if(redirectAttributes.getFlashAttributes().containsKey("message")) {
-            model.addAttribute("message", redirectAttributes.getFlashAttributes().get("message"));
-            model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
-        }
-        setMenuAttribute(model);
-        return "estudiantes/list";
-    }
-
-    /**
-     * Muestra el formulario para crear un nuevo estudiante.
-     * GET /estudiantes/new
-     * @param model Modelo para pasar datos a la vista
-     * @return Nombre de la plantilla del formulario
-     */
-    @GetMapping("/new")
-    public String goToNewEstudianteForm(Model model){
-        setMenuAttribute(model);
         try{
-            model.addAttribute("estudiante", new EstudianteDTO());
-            model.addAttribute("code", 200);
-            return "estudiantes/form";
+            Page<EstudianteDTO> estudiantes = null;
+            
+            estudiantes = estudianteService.searchInAllFields(filtro, page, size, sortBy);
+            
+            model.addAttribute("estudiantes", estudiantes);
+            model.addAttribute("filtro", filtro);
+            model.addAttribute("page", page);
+            model.addAttribute("size", estudiantes.getSize());
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("totalPages", estudiantes.getTotalPages());
+            model.addAttribute("totalElements", estudiantes.getTotalElements());
+            model.addAttribute("url", "estudiantes");
+            
+            // Pasar mensajes flash al template si existen
+            if(redirectAttributes.getFlashAttributes().containsKey("message")) {
+                model.addAttribute("message", redirectAttributes.getFlashAttributes().get("message"));
+                model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
+            }
+            setMenuAttribute(model);
         }catch(Exception e){
-            model.addAttribute("message", "Ocurrió un error al cargar el formulario");
             model.addAttribute("code", 500);
-            return "redirect:/estudiantes/list";
+            model.addAttribute("message", e.getMessage());
         }
+        return "estudiantes/list";
     }
 
     /**
@@ -110,9 +95,30 @@ public class EstudiantesWebController {
             }
             throw new RuntimeException("Ocurrió un error al grabar el estudiante");
         }catch(Exception e){
+            System.out.println("Error al grabar el estudiante: " + e.getMessage());
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("code", 500);
             return "redirect:/estudiantes/form";
+        }
+    }
+
+    /**
+     * Muestra el formulario para crear un nuevo estudiante.
+     * GET /estudiantes/new
+     * @param model Modelo para pasar datos a la vista
+     * @return Nombre de la plantilla del formulario
+     */
+    @GetMapping("/new")
+    public String goToNewEstudianteForm(Model model){
+        setMenuAttribute(model);
+        try{
+            model.addAttribute("estudiante", new EstudianteDTO());
+            model.addAttribute("code", 200);
+            return "estudiantes/form";
+        }catch(Exception e){
+            model.addAttribute("message", "Ocurrió un error al cargar el formulario");
+            model.addAttribute("code", 500);
+            return "redirect:/estudiantes/list";
         }
     }
 

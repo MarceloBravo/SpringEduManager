@@ -19,8 +19,8 @@ import com.SpringEduManager.web.entities.Curso;
  * Incluye métodos optimizados con JOIN FETCH para evitar problemas N+1.
  */
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, Long> {
-    
+public interface CursoRepository extends JpaRepository<Curso, Long> {    
+
     /**
      * Busca cursos por nombre (case insensitive)
      * @param nombre Nombre o parte del nombre a buscar

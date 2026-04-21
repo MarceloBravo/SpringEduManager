@@ -23,7 +23,7 @@ public class Curso{
     private String descripcion;
 
     @ManyToMany(mappedBy = "cursos", fetch = FetchType.LAZY)
-    private Set<Estudiante> estudiantes = new HashSet<>();
+    private Set<Usuario> estudiantes = new HashSet<>();
 
     public Curso(){}
     
@@ -52,11 +52,11 @@ public class Curso{
         this.descripcion = descripcion;
     }
 
-    public Set<Estudiante> getEstudiantes() {
+    public Set<Usuario> getEstudiantes() {
         return estudiantes;
     }
 
-    public void setEstudiantes(Set<Estudiante> estudiantes) {
+    public void setEstudiantes(Set<Usuario> estudiantes) {
         this.estudiantes = estudiantes;
     }
 }

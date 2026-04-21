@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.SpringEduManager.web.entities.Estudiante;
+import com.SpringEduManager.web.entities.Usuario;
 
 /**
  * Repositorio para la gestión de entidades Estudiante.
@@ -19,28 +19,33 @@ import com.SpringEduManager.web.entities.Estudiante;
  * Incluye métodos optimizados con JOIN FETCH para evitar problemas N+1.
  */
 @Repository
-public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
+public interface EstudianteRepository extends JpaRepository<Usuario, Long> {
     
+       @Query("SELECT DISTINCT e FROM Usuario e " +
+           "WHERE EXISTS (SELECT 1 FROM e.roles r WHERE r.authority = 'STUDENT') " +
+           "ORDER BY e.nombre ASC")
+       Page<Usuario> getAll(Pageable pageable);
+
     /**
      * Busca estudiantes por nombre (case insensitive)
      * @param nombre Nombre o parte del nombre a buscar
      * @return Lista de estudiantes que coinciden con la búsqueda
      */
-    List<Estudiante> findByNombreContainingIgnoreCase(String nombre);
+    List<Usuario> findByNombreContainingIgnoreCase(String nombre);
     
     /**
      * Busca estudiantes por apellido (case insensitive)
      * @param apellido Apellido o parte del apellido a buscar
      * @return Lista de estudiantes que coinciden con la búsqueda
      */
-    List<Estudiante> findByApellidoContainingIgnoreCase(String apellido);
+    List<Usuario> findByApellidoContainingIgnoreCase(String apellido);
     
     /**
      * Busca un estudiante por su email
      * @param email Email del estudiante a buscar
      * @return Optional con el estudiante encontrado o vacío
      */
-    Optional<Estudiante> findByEmail(String email);
+    Optional<Usuario> findByEmail(String email);
 
     /**
      * Busca estudiantes en múltiples campos (nombre, apellido, email) con paginación.
@@ -49,11 +54,14 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
      * @param pageable Configuración de paginación y ordenamiento
      * @return Página de estudiantes que coinciden con la búsqueda
      */
-    @Query("SELECT e FROM Estudiante e WHERE " +
-           "(LOWER(e.nombre) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(e.apellido) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(e.email) LIKE LOWER(CONCAT('%', :search, '%')))")
-    Page<Estudiante> searchInMultipleFields(
+    @Query("SELECT e FROM Usuario e WHERE " +
+           "EXISTS (SELECT 1 FROM e.roles r WHERE r.authority = 'STUDENT') AND " +
+           "(" +
+               "LOWER(e.nombre) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+               "LOWER(e.apellido) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+               "LOWER(e.email) LIKE LOWER(CONCAT('%', :search, '%'))" +
+           ")")
+    Page<Usuario> searchInMultipleFields(
         @Param("search") String search,
         Pageable pageable
     );
@@ -66,10 +74,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
      * @param estudianteId ID del estudiante a buscar
      * @return Estudiante con sus cursos cargados
      */
-    @Query("SELECT DISTINCT e FROM Estudiante e " +
+    @Query("SELECT DISTINCT e FROM Usuario e " +
            "LEFT JOIN FETCH e.cursos c " +
-           "WHERE e.id = :estudianteId")
-    Estudiante findEstudianteWithCursos(@Param("estudianteId") Long estudianteId);
+           "WHERE e.id = :estudianteId AND " + 
+           "EXISTS (SELECT 1 FROM e.roles r WHERE r.authority = 'STUDENT')")
+    Usuario findEstudianteWithCursos(@Param("estudianteId") Long estudianteId);
     
     /**
      * Obtiene todos los estudiantes con sus cursos usando JOIN FETCH (paginado).
@@ -77,10 +86,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
      * @param pageable Configuración de paginación y ordenamiento
      * @return Página de estudiantes con sus cursos cargados
      */
-    @Query("SELECT DISTINCT e FROM Estudiante e " +
+    @Query("SELECT DISTINCT e FROM Usuario e " +
            "LEFT JOIN FETCH e.cursos c " +
+           "WHERE EXISTS (SELECT 1 FROM e.roles r WHERE r.authority = 'STUDENT') " +
            "ORDER BY e.nombre ASC")
-    Page<Estudiante> findAllEstudiantesWithCursos(Pageable pageable);
+    Page<Usuario> findAllEstudiantesWithCursos(Pageable pageable);
     
     /**
      * Busca estudiantes por nombre y carga sus cursos usando JOIN FETCH.
@@ -89,9 +99,10 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
      * @param pageable Configuración de paginación y ordenamiento
      * @return Página de estudiantes que coinciden con sus cursos cargados
      */
-    @Query("SELECT DISTINCT e FROM Estudiante e " +
+    @Query("SELECT DISTINCT e FROM Usuario e " +
            "LEFT JOIN FETCH e.cursos c " +
-           "WHERE LOWER(e.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) " +
+           "WHERE EXISTS (SELECT 1 FROM e.roles r WHERE r.authority = 'STUDENT') AND " + 
+           "LOWER(e.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) " +           
            "ORDER BY e.nombre ASC")
-    Page<Estudiante> searchEstudiantesWithCursos(@Param("nombre") String nombre, Pageable pageable);
+    Page<Usuario> searchEstudiantesWithCursos(@Param("nombre") String nombre, Pageable pageable);
 }

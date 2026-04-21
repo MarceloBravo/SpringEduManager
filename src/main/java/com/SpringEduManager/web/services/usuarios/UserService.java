@@ -50,16 +50,18 @@ public interface UserService {
      * @return ID del usuario guardado
      */
     Long save(UserDTO user);
-    
-    /**
-     * Registra un nuevo usuario con validaciones adicionales.
-     * @param userDTO UserDTO con los datos del nuevo usuario
-     */
-    void register(UserDTO userDTO);
-
+   
     /**
      * Elimina un usuario por su ID.
      * @param id ID del usuario a eliminar
      */
     void delete(Long id);
+
+    /**
+     * Obtiene todos los usuarios ordenados por rol.
+     * @param page Número de página
+     * @param size Tamaño de página
+     * @return Página de usuarios ordenados por rol
+     */
+    Page<UserDTO> findAllOrderedByRole(int page, int size);
 }

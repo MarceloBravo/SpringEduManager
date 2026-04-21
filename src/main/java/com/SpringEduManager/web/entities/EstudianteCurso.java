@@ -17,7 +17,7 @@ public class EstudianteCurso {
 
     @ManyToOne
     @JoinColumn(name="estudiante_id", nullable = false)
-    private Estudiante estudiante;
+    private Usuario estudiante;
 
     @ManyToOne
     @JoinColumn(name="curso_id", nullable = false)
@@ -25,7 +25,7 @@ public class EstudianteCurso {
 
     public EstudianteCurso(){}
 
-    public EstudianteCurso(Long id, Estudiante estudiante, Curso curso) {
+    public EstudianteCurso(Long id, Usuario estudiante, Curso curso) {
         this.id = id;
         this.estudiante = estudiante;
         this.curso = curso;
@@ -40,11 +40,11 @@ public class EstudianteCurso {
         this.id = id;
     }
 
-    public Estudiante getEstudiante() {
+    public Usuario getEstudiante() {
         return estudiante;
     }
 
-    public void setEstudiante(Estudiante estudiante) {
+    public void setEstudiante(Usuario estudiante) {
         this.estudiante = estudiante;
     }
 

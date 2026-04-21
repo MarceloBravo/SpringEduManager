@@ -1,5 +1,6 @@
 package com.SpringEduManager.web.controllers.web;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.SpringEduManager.web.dto.RolDTO;
 import com.SpringEduManager.web.dto.UserDTO;
+import com.SpringEduManager.web.enums.RolesEnum;
+import com.SpringEduManager.web.services.roles.RolService;
 import com.SpringEduManager.web.services.usuarios.UserService;
+
 import org.springframework.data.domain.Page;
 
 /**
@@ -28,6 +33,9 @@ public class UsuariosWebController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RolService rolService;
     
     /**
      * Muestra el listado de usuarios con opcional filtro por nombre.
@@ -60,7 +68,11 @@ public class UsuariosWebController {
             setMenuAttribute(model);
             Page<UserDTO> users = null;
 
-            users = userService.searchInAllFields(filtro, page, size, sortBy);
+            if("role".equals(sortBy)) {
+                users = userService.findAllOrderedByRole(page, size);
+            } else {
+                users = userService.searchInAllFields(filtro, page, size, sortBy);
+            }
 
             model.addAttribute("users", users.getContent());
             model.addAttribute("filtro", filtro);
@@ -70,6 +82,7 @@ public class UsuariosWebController {
             model.addAttribute("totalPages", users.getTotalPages());
             model.addAttribute("totalElements", users.getTotalElements());
             model.addAttribute("url", "users");
+
             
             // Pasar mensajes flash al template si existen
             if(redirectAttributes.getFlashAttributes().containsKey("message")) {
@@ -77,6 +90,7 @@ public class UsuariosWebController {
                 model.addAttribute("code", redirectAttributes.getFlashAttributes().get("code"));
             }
         }catch(Exception e){
+            System.out.println("Error al guardar usuario: " + e.getMessage());
             model.addAttribute("message", "Ocurrió un error al buscar el listado de registros");
             model.addAttribute("code", 500);
         }
@@ -94,6 +108,8 @@ public class UsuariosWebController {
         try{
             setMenuAttribute(model);
             model.addAttribute("user", new UserDTO());
+            List<RolDTO> roles = rolService.findAll();
+            model.addAttribute("roles", roles.stream().map(r -> r.getNombre()).collect(java.util.stream.Collectors.toList()));
             return "usuarios/form";
         }catch(Exception e){
             model.addAttribute("message", "Ocurrió un error al cargar el formulario");
@@ -139,6 +155,8 @@ public class UsuariosWebController {
         try{
             setMenuAttribute(model);
             UserDTO user = this.userService.findById(id);
+            List<RolDTO> roles = rolService.findAll();
+            model.addAttribute("roles", roles.stream().map(r -> r.getNombre()).collect(java.util.stream.Collectors.toList()));
             model.addAttribute("user", user);
             return "usuarios/form";
         }catch(Exception e){

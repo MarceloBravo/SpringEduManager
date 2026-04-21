@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "vscjava.vscode-java-pack",
+        "ms-vscode.vscode-spring-boot-pack",
+        "vmware.vscode-spring-boot"
+    ]
+}

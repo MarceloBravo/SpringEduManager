@@ -15,9 +15,9 @@ import com.SpringEduManager.web.dto.EstudianteDTO;
 import com.SpringEduManager.web.dto.EvaluacionRequestDTO;
 import com.SpringEduManager.web.dto.NotaConIdDTO;
 import com.SpringEduManager.web.entities.Curso;
-import com.SpringEduManager.web.entities.Estudiante;
 import com.SpringEduManager.web.entities.EstudianteCurso;
 import com.SpringEduManager.web.entities.Evaluacion;
+import com.SpringEduManager.web.entities.Usuario;
 import com.SpringEduManager.web.repositories.CursoRepository;
 import com.SpringEduManager.web.repositories.EstudianteRepository;
 import com.SpringEduManager.web.repositories.EvaluacionRepository;
@@ -64,7 +64,7 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
      */
     @Override
     public List<CursoNotasDTO[]> getEstudianteNotasByUserEmail(String userEmail){
-        Estudiante estudiante = estudianteRepository.findByEmail(userEmail).orElse(null);
+        Usuario estudiante = estudianteRepository.findByEmail(userEmail).orElse(null);
         if(estudiante == null){
             throw new RuntimeException("Estudiante no encontrado");
         }
@@ -130,7 +130,7 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
     public Long save(EvaluacionRequestDTO request) {
         Double nota = request.getNota();
         java.sql.Date fecha = request.getFecha() != null ? request.getFecha() : new java.sql.Date(System.currentTimeMillis());
-        Estudiante estudiante = getEstudiante(request.getEstudianteId());
+        Usuario estudiante = getEstudiante(request.getEstudianteId());
         Curso curso = getCurso(request.getCursoId());
         EstudianteCurso estCurso = getEstudianteCurso(estudiante, curso);
         Long id = request.getId();
@@ -148,8 +148,8 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
         return savedId;
     }
 
-    private Estudiante getEstudiante(Long id) {
-        Estudiante estudiante = estudianteRepository.findById(id).orElse(null);
+    private Usuario getEstudiante(Long id) {
+        Usuario estudiante = estudianteRepository.findById(id).orElse(null);
         if(estudiante == null){
             throw new RuntimeException("Estudiante no encontrado");
         }
@@ -164,7 +164,7 @@ public class EvaluacionesServiceImpl implements EvaluacionesService {
         return curso;
     }
 
-    private EstudianteCurso getEstudianteCurso(Estudiante estudiante, Curso curso) {
+    private EstudianteCurso getEstudianteCurso(Usuario estudiante, Curso curso) {
         List<EstudianteCurso> estudianteCursos = estudianteCursoRepository.findByEstudianteId(estudiante.getId());
         EstudianteCurso estCurso = estudianteCursos.stream()
             .filter(ec -> ec.getCurso().getId().equals(curso.getId()))

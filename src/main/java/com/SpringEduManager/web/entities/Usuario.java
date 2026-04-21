@@ -1,24 +1,103 @@
 package com.SpringEduManager.web.entities;
-import com.SpringEduManager.web.enums.RolesEnum;
+import java.util.HashSet;
+import java.util.Set;
 
+
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name="usuarios")
-public class Usuario extends Persona {    
+public class Usuario {    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
+    @Column(name = "nombre", length = 100, nullable = false)
+    protected String nombre;
+    @Column(name="apellido", length = 100, nullable = false)
+    protected String apellido;
+    @Column(name="email", length = 100, nullable = false)
+    protected String email;
     @Column(name="password", length = 100, nullable = false)
     private String password;
-    @Column(name="role", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    private RolesEnum role;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "estudiante_cursos",
+        joinColumns = {@JoinColumn(name = "estudiante_id")},
+        inverseJoinColumns = {@JoinColumn(name = "curso_id")}
+    )
+    private Set<Curso> cursos = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "usuario_roles",
+        joinColumns = {@JoinColumn(name = "usuario_id")},
+        inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private Set<Rol> roles = new HashSet<>();
 
     public Usuario(){        
     }
 
+    public Usuario(String nombre, String apellido, String email) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+    }
+
+    public Usuario(String nombre, String apellido, String email, String password) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
+    public void setId(Long id){
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Getters and Setters
     public String getPassword() {
         return password;
     }
@@ -27,13 +106,20 @@ public class Usuario extends Persona {
         this.password = password;
     }
 
-    public RolesEnum getRole() {
-        return role;
+    public Set<Curso> getCursos() {
+        return cursos;
     }
 
-    public void setRole(RolesEnum role) {
-        this.role = role;
+    public void setCursos(Set<Curso> cursos) {
+        this.cursos = cursos;
+    }
+    
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+    
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
     }
     
 }
-
