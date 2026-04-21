@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.SpringEduManager.web.dto.EstudianteDTO;
-import com.SpringEduManager.web.dto.UserDTO;
-
 /**
  * Interfaz de servicio para la gestión de estudiantes.
  * Define las operaciones CRUD y consultas especializadas para
