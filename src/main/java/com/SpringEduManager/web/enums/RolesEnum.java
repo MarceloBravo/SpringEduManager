@@ -1,9 +1,14 @@
 package com.SpringEduManager.web.enums;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum RolesEnum {
     ADMIN(1, "ROLE_ADMIN"),
     USER(2, "ROLE_ADMIN_STUDENT"),
-    STUDENT(3, "ROLE_STUDENT");
+    STUDENT(3, "ROLE_STUDENT"),
+    TEACHER(4, "ROLE_TEACHER");
     
     private final int role;
     private final String authority;
@@ -38,6 +43,13 @@ public enum RolesEnum {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Rol no válido: " + roleName);
         }
+    }
+    
+    // Método para obtener todos los valores del enum como lista de strings
+    public static List<String> getAllRoleNames() {
+        return Arrays.stream(RolesEnum.values())
+                .map(RolesEnum::name)
+                .collect(Collectors.toList());
     }
     
     // Sobrescribir name() para que Spring Security funcione correctamente

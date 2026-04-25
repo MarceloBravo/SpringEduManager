@@ -27,6 +27,15 @@
         <!-- Solo visible para ADMIN -->
         <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
             class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
+            th:classappend="${menu == 'roles'} ? 'active-menu' : ''"
+            th:href="@{/roles/list}">
+            <span class="material-symbols-outlined mr-3" data-icon="group">groups</span>
+            <span class="font-medium text-sm">Roles</span>
+        </a>        
+        
+        <!-- Solo visible para ADMIN -->
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
+            class="flex items-center px-6 py-3 text-slate-600 hover:bg-white/50 transition-all duration-200"
             th:classappend="${menu == 'usuarios'} ? 'active-menu' : ''"
             th:href="@{/users/list}">
             <span class="material-symbols-outlined mr-3" data-icon="group">group</span>
