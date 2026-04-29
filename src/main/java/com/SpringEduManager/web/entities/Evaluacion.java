@@ -1,15 +1,16 @@
 package com.SpringEduManager.web.entities;
 
 import java.sql.Date;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name="evaluaciones")
@@ -75,6 +76,29 @@ public class Evaluacion {
 
     public void setEstudianteCurso(EstudianteCurso estudianteCurso) {
         this.estudianteCurso = estudianteCurso;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Evaluacion that = (Evaluacion) o;
+        return Objects.equals(id, that.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+    
+    @Override
+    public String toString() {
+        return "Evaluacion {id=" + id + 
+                ", nota=" + nota + 
+                ", fecha=" + fecha + 
+                ", estudianteCurso_id=" + (estudianteCurso != null ? estudianteCurso.getId() : "null") + 
+                "}";
     }
 
 }

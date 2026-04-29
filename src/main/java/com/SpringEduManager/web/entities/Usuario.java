@@ -1,7 +1,8 @@
 package com.SpringEduManager.web.entities;
-import java.util.HashSet;
-import java.util.Set;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
@@ -120,6 +121,30 @@ public class Usuario {
     
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(id, usuario.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+    
+    @Override
+    public String toString() {
+        return "Usuario {id=" + id + 
+                ", nombre=" + nombre + 
+                ", apellido=" + apellido + 
+                ", email=" + email + 
+                ", password=" + password + 
+                "}";
     }
     
 }

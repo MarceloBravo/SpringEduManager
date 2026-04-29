@@ -7,6 +7,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import java.util.Objects;
 
 @Entity
 @Table(name="estudiante_cursos")
@@ -54,6 +55,28 @@ public class EstudianteCurso {
 
     public void setCurso(Curso curso) {
         this.curso = curso;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        EstudianteCurso that = (EstudianteCurso) o;
+        return Objects.equals(id, that.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+    
+    @Override
+    public String toString() {
+        return "EstudianteCurso {id=" + id + 
+                ", estudiante_id=" + (estudiante != null ? estudiante.getId() : "null") + 
+                ", curso_id=" + (curso != null ? curso.getId() : "null") + 
+                "}";
     }
 
 }

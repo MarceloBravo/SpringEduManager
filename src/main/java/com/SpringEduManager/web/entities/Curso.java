@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.FetchType;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Objects;
 
 @Entity
 @Table(name="cursos")  
@@ -58,5 +59,27 @@ public class Curso{
 
     public void setEstudiantes(Set<Usuario> estudiantes) {
         this.estudiantes = estudiantes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        Curso curso = (Curso) o;
+        return Objects.equals(id, curso.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+    
+    @Override
+    public String toString() {
+        return "Curso {id=" + id + 
+                ", nombre=" + nombre + 
+                ", descripcion=" + descripcion + 
+                "}";
     }
 }
